@@ -49,284 +49,133 @@ INSTRUCTIONS:
 //Jquery up and running
 $(document).ready(function () {}); //React up and running
 
-var drumPadArr = [{
-  id: "Q",
-  keyCode: 81,
-  priName: "Heater-1",
-  secName: "Chord-1",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3"
+var key_array = [{
+  id: "0"
 }, {
-  id: "W",
-  keyCode: 87,
-  priName: "Heater-2",
-  secName: "Chord-2",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Chord_2.mp3"
+  id: "1"
 }, {
-  id: "E",
-  keyCode: 69,
-  priName: "Heater-3",
-  secName: "Chord-3",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Chord_3.mp3"
+  id: "2"
 }, {
-  id: "A",
-  keyCode: 65,
-  priName: "Heater-4",
-  secName: "Shaker",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3"
+  id: "3"
 }, {
-  id: "S",
-  keyCode: 83,
-  priName: "Clap",
-  secName: "Open-HH",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Dry_Ohh.mp3"
+  id: "4"
 }, {
-  id: "D",
-  keyCode: 68,
-  priName: "Open-HH",
-  secName: "Closed-HH",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3"
+  id: "5"
 }, {
-  id: "Z",
-  keyCode: 90,
-  priName: "Kick-n'-Hat",
-  secName: "Punchy-Kick",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3"
+  id: "6"
 }, {
-  id: "X",
-  keyCode: 88,
-  priName: "Kick",
-  secName: "Side-Stick",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3"
+  id: "7"
 }, {
-  id: "C",
-  keyCode: 67,
-  priName: "Closed-HH",
-  secName: "Snare",
-  priSource: "https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3",
-  secSource: "https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3"
-}]; //power indicator component
-// const powerIndicatorComponent = (props) =>{
-//   return (
-//     <div id="power-indicator">
-//       <h3>Power</h3>
-//       <input type="radio" id="power-LED" name="power-led" value="power">
-//       <label for="power-LED">{props.power}</label><br>
-//     </div>
-//   )
-// };
-//power indicator component
+  id: "8"
+}, {
+  id: "9"
+}, {
+  id: "."
+}, {
+  id: "x"
+}, {
+  id: "/"
+}, {
+  id: "+"
+}, {
+  id: "-"
+}, {
+  id: "="
+}, {
+  id: "AC"
+}]; //displays inputs and results on screen
 
-var PowerIndicatorComponent = function PowerIndicatorComponent(props) {
-  var powerOn = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: 'lime'
-  };
-  var powerOff = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: '#f40'
-  };
-  var powerDefault = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: '#222'
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    id: "power-indicator"
-  }, /*#__PURE__*/React.createElement("h5", {
-    "class": ""
-  }, "Power"), /*#__PURE__*/React.createElement("div", {
-    id: "group-power-LED"
-  }, /*#__PURE__*/React.createElement("div", {
-    id: "power-on-LED",
-    className: "power-LED",
-    style: props.power ? powerOn : powerDefault
-  }), /*#__PURE__*/React.createElement("label", {
-    "for": "power-LED"
-  }, "on"), /*#__PURE__*/React.createElement("div", {
-    id: "power-off-LED",
-    className: "power-LED",
-    style: props.power ? powerDefault : powerOff
-  }), /*#__PURE__*/React.createElement("label", {
-    "for": "power-LED"
-  }, "off"), /*#__PURE__*/React.createElement("br", null)), /*#__PURE__*/React.createElement("button", {
-    className: "button-class",
-    id: "toggle-power-button",
-    onClick: props.togglePower
-  }, "Power"));
-}; //Bank Component
+var DisplayComponent = /*#__PURE__*/function (_React$Component) {
+  _inherits(DisplayComponent, _React$Component);
 
+  var _super = _createSuper(DisplayComponent);
 
-var BankComponent = function BankComponent(props) {
-  return /*#__PURE__*/React.createElement("div", {
-    id: "bank-component"
-  }, /*#__PURE__*/React.createElement("div", {
-    id: "bank-display"
-  }, /*#__PURE__*/React.createElement("h5", null, props.bank)), /*#__PURE__*/React.createElement("button", {
-    className: "button-class",
-    id: "toggle-bank-button",
-    onClick: props.toggleBank
-  }, "Bank"));
-}; //display component
+  function DisplayComponent(props) {
+    _classCallCheck(this, DisplayComponent);
 
-
-var DisplayComponent = function DisplayComponent(props) {
-  return /*#__PURE__*/React.createElement("div", {
-    id: "display",
-    "class": "col"
-  }, /*#__PURE__*/React.createElement("h2", {
-    "class": ""
-  }, props.audioClipName));
-}; //DrumPad Component
-
-
-var DrumPadComponent = /*#__PURE__*/function (_React$Component) {
-  _inherits(DrumPadComponent, _React$Component);
-
-  var _super = _createSuper(DrumPadComponent);
-
-  function DrumPadComponent(props) {
-    var _this;
-
-    _classCallCheck(this, DrumPadComponent);
-
-    _this = _super.call(this, props);
-    _this.handleKeyPress = _this.handleKeyPress.bind(_assertThisInitialized(_this));
-    _this.playAudio = _this.playAudio.bind(_assertThisInitialized(_this));
-    return _this;
+    return _super.call(this, props); //render
   }
 
-  _createClass(DrumPadComponent, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      document.addEventListener('keydown', this.handleKeyPress);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      document.removeEventListener('keydown', this.handleKeyPress);
-    }
-  }, {
-    key: "handleKeyPress",
-    value: function handleKeyPress(e) {
-      switch (e.keyCode) {
-        case 32:
-          this.props.toggleBank();
-          break;
-
-        case 13:
-          this.props.togglePower();
-          break;
-
-        default:
-          if (e.keyCode === this.props.keyCode) {
-            this.playAudio();
-          }
-
-          break;
-      }
-    }
-  }, {
-    key: "playAudio",
-    value: function playAudio() {
-      if (this.props.power) {
-        var sound = document.getElementById(this.props.id); //grabs onto the audio element and stores it in sound
-
-        sound.currentTime = 0;
-        sound.play();
-
-        if (this.props.bank === "Piano-kit") {
-          this.props.updateDisplay(this.props.secName.replace(/-/g, ' '));
-        } else {
-          this.props.updateDisplay(this.props.priName.replace(/-/g, ' '));
-        }
-      }
-    }
-  }, {
+  _createClass(DisplayComponent, [{
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
-        id: "drum-pad-gradient"
-      }, /*#__PURE__*/React.createElement("button", {
-        id: this.props.bank === "Piano-kit" ? this.props.secName : this.props.priName,
-        className: "drum-pad button-class",
-        onClick: this.playAudio
-      }, /*#__PURE__*/React.createElement("p", null, this.props.id), this.props.bank === "Piano-kit" ? /*#__PURE__*/React.createElement("audio", {
-        id: this.props.id,
-        src: this.props.secSource,
-        className: "clip"
-      }) : /*#__PURE__*/React.createElement("audio", {
-        id: this.props.id,
-        src: this.props.priSource,
-        className: "clip"
-      })));
+        id: "display",
+        "class": "col"
+      }, /*#__PURE__*/React.createElement("h2", {
+        "class": ""
+      }, this.props.display));
     }
   }]);
 
-  return DrumPadComponent;
-}(React.Component); //drumPad container component
+  return DisplayComponent;
+}(React.Component); //calculator buttons component
 
 
-var DrumPadContainerComponent = function DrumPadContainerComponent(props) {
-  var drumPadList = props.item.map(function (item) {
-    return /*#__PURE__*/React.createElement(DrumPadComponent, {
-      id: item.id,
-      secId: item.id + props.bank,
-      priName: item.priName,
-      secName: item.secName,
-      priSource: item.priSource,
-      secSource: item.secSource,
-      keyCode: item.keyCode,
-      updateDisplay: props.updateDisplay,
-      bank: props.bank,
-      power: props.power,
-      toggleBank: props.toggleBank,
-      togglePower: props.togglePower
-    }) //for every element in array, create a drumPad and store passing props id, name and priSource to the component.
-    ;
+var CalculatorButtons = function CalculatorButtons(props) {
+  var button_array = props.item.map(function (item) {
+    return /*#__PURE__*/React.createElement("button", {
+      onClick: props.handleClick
+    }, /*#__PURE__*/React.createElement("p", null, item.id));
   });
-  return /*#__PURE__*/React.createElement("div", {
-    id: "drum-pad-container"
-  }, drumPadList) //div is necessary because ele tranforms to multiple elements and multiple elements must be wrapped in one to be returned in JSX
-  ;
+  return /*#__PURE__*/React.createElement("div", null, button_array);
 };
 
-var App = /*#__PURE__*/function (_React$Component2) {
-  _inherits(App, _React$Component2);
+var Calculator = /*#__PURE__*/function (_React$Component2) {
+  _inherits(Calculator, _React$Component2);
 
-  var _super2 = _createSuper(App);
+  var _super2 = _createSuper(Calculator);
+
+  function Calculator(props) {
+    var _this;
+
+    _classCallCheck(this, Calculator);
+
+    _this = _super2.call(this, props); //state
+    //method bindings
+
+    _this.handleKeyPress = _this.handleKeyPress.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(Calculator, [{
+    key: "handleKeyPress",
+    value: function handleKeyPress() {}
+  }, {
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DisplayComponent, null), /*#__PURE__*/React.createElement(CalculatorButtons, {
+        item: key_array
+      }));
+    }
+  }]);
+
+  return Calculator;
+}(React.Component);
+
+var App = /*#__PURE__*/function (_React$Component3) {
+  _inherits(App, _React$Component3);
+
+  var _super3 = _createSuper(App);
 
   function App(props) {
     var _this2;
 
     _classCallCheck(this, App);
 
-    _this2 = _super2.call(this, props);
+    _this2 = _super3.call(this, props);
     _this2.state = {
       power: false,
-      bank: "Heater-kit",
-      display: "Click a button"
+      display: "",
+      operand1set: false,
+      operator1set: false,
+      operand2set: false
     };
     _this2.togglePower = _this2.togglePower.bind(_assertThisInitialized(_this2));
-    _this2.toggleBank = _this2.toggleBank.bind(_assertThisInitialized(_this2));
     _this2.updateDisplay = _this2.updateDisplay.bind(_assertThisInitialized(_this2));
     return _this2;
-  }
+  } //handles AC button click
+
 
   _createClass(App, [{
     key: "togglePower",
@@ -336,55 +185,21 @@ var App = /*#__PURE__*/function (_React$Component2) {
           power: !state.power
         };
       });
-    }
-  }, {
-    key: "toggleBank",
-    value: function toggleBank() {
-      this.setState(function (state) {
-        if (state.power) {
-          if (state.bank === "Heater-kit") {
-            return {
-              bank: "Piano-kit",
-              display: "Piano-kit"
-            };
-          } else {
-            return {
-              bank: "Heater-kit",
-              display: "Heater-kit"
-            };
-          }
-        }
-      });
-    }
+    } //updates the display according to click
+
   }, {
     key: "updateDisplay",
-    value: function updateDisplay(name) {
+    value: function updateDisplay(val) {
       this.setState({
-        display: name
+        display: val
       });
     }
   }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
-        id: "drum-machine"
-      }, /*#__PURE__*/React.createElement("h3", null, "MP1513-EO"), /*#__PURE__*/React.createElement(DisplayComponent, {
-        audioClipName: this.state.display
-      }), /*#__PURE__*/React.createElement(DrumPadContainerComponent, {
-        item: drumPadArr,
-        togglePower: this.togglePower,
-        toggleBank: this.toggleBank,
-        updateDisplay: this.updateDisplay,
-        bank: this.state.bank,
-        power: this.state.power
-      }), /*#__PURE__*/React.createElement(PowerIndicatorComponent, {
-        power: this.state.power,
-        togglePower: this.togglePower
-      }), /*#__PURE__*/React.createElement(BankComponent, {
-        power: this.state.power,
-        toggleBank: this.toggleBank,
-        bank: this.state.bank
-      }));
+        id: "calculator-machine"
+      }, /*#__PURE__*/React.createElement("h3", null, "MP1513-EO"), /*#__PURE__*/React.createElement(Calculator, null));
     }
   }]);
 
@@ -423,15 +238,15 @@ var connect = ReactRedux.connect; //connects state and dispatch of store to reac
 
 var ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(App); //app now has props that include value-connecting redux state, and update-connecting redux action creator, update, which are all just js.
 
-var AppWrapper = /*#__PURE__*/function (_React$Component3) {
-  _inherits(AppWrapper, _React$Component3);
+var AppWrapper = /*#__PURE__*/function (_React$Component4) {
+  _inherits(AppWrapper, _React$Component4);
 
-  var _super3 = _createSuper(AppWrapper);
+  var _super4 = _createSuper(AppWrapper);
 
   function AppWrapper() {
     _classCallCheck(this, AppWrapper);
 
-    return _super3.apply(this, arguments);
+    return _super4.apply(this, arguments);
   }
 
   _createClass(AppWrapper, [{

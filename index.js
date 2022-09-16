@@ -36,242 +36,115 @@ $(document).ready(()=>{
 
 //React up and running
 
-const drumPadArr = [
-    {
-        id:"Q",
-        keyCode: 81,
-        priName:"Heater-1",
-        secName: "Chord-1",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Chord_1.mp3",
-    },
-    {
-        id:"W",
-        keyCode: 87,
-        priName:"Heater-2",
-        secName: "Chord-2",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Heater-2.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Chord_2.mp3",
-    },
-    {
-        id:"E",
-        keyCode: 69,
-        priName:"Heater-3",
-        secName: "Chord-3",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Heater-3.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Chord_3.mp3",
-    },
-    {
-        id:"A",
-        keyCode: 65,
-        priName:"Heater-4",
-        secName: "Shaker",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Heater-4_1.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3",
-    },
-    {
-        id:"S",
-        keyCode: 83,
-        priName:"Clap",
-        secName: "Open-HH",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Dry_Ohh.mp3",
-    },
-    {
-        id:"D",
-        keyCode: 68,
-        priName:"Open-HH",
-        secName: "Closed-HH",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Bld_H1.mp3",
-    },
-    {
-        id:"Z",
-        keyCode: 90,
-        priName:"Kick-n'-Hat",
-        secName: "Punchy-Kick",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3",
-    },
-    {
-        id:"X",
-        keyCode: 88,
-        priName:"Kick",
-        secName: "Side-Stick",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3",
-    },
-    {
-        id:"C",
-        keyCode: 67,
-        priName:"Closed-HH",
-        secName: "Snare",
-        priSource:"https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3",
-        secSource:"https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3",
-    },
+const key_array = [
+  {
+    id: "0"
+  },
+  {
+    id: "1"
+  },
+  {
+    id: "2"
+  },
+  {
+    id: "3"
+  },
+  {
+    id: "4"
+  },
+  {
+    id: "5"
+  },
+  {
+    id: "6"
+  },
+  {
+    id: "7"
+  },
+  {
+    id: "8"
+  },
+  {
+    id: "9"
+  },
+  {
+    id: "."
+  },
+  {
+    id: "x"
+  },
+  {
+    id: "/"
+  },
+  {
+    id: "+"
+  },
+  {
+    id: "-"
+  },
+  {
+    id: "="
+  },
+  {
+    id: "AC"
+  },
 ]
 
-//power indicator component
-// const powerIndicatorComponent = (props) =>{
-//   return (
-//     <div id="power-indicator">
-//       <h3>Power</h3>
-//       <input type="radio" id="power-LED" name="power-led" value="power">
-//       <label for="power-LED">{props.power}</label><br>
-//     </div>
-//   )
-// };
 
-//power indicator component
-const PowerIndicatorComponent = (props) =>{
+//displays inputs and results on screen
+class DisplayComponent extends React.Component{
+  constructor(props){
+    super(props)
 
-  const powerOn = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: 'lime'
+  //render
   }
-
-  const powerOff = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: '#f40'
-  }
-
-  const powerDefault = {
-    width: '7px',
-    height: '7px',
-    border: '2px #444 solid',
-    borderRadius: '50%',
-    background: '#222'
-  }
-
-  return (
-    <div id="power-indicator">
-      <h5 class="">Power</h5>
-      <div id="group-power-LED">
-        <div id="power-on-LED" className="power-LED" style={props.power ? powerOn : powerDefault}></div>
-        <label for="power-LED">on</label>
-        <div id="power-off-LED" className="power-LED" style={props.power ? powerDefault : powerOff}></div>
-        <label for="power-LED">off</label><br/>
+  
+  render(){
+    return (
+      <div id="display" class="col">
+        <h2 class="">{this.props.display}</h2>
       </div>
+    )
+  }
 
-      <button className="button-class" id="toggle-power-button" onClick={props.togglePower}>Power</button>
-      
-    </div>
+}
+
+//calculator buttons component
+const CalculatorButtons = (props) =>{
+  const button_array = props.item.map((item)=>(
+  <button onClick={props.handleClick}>
+    <p>{item.id}</p>
+  </button>
   )
-};
+  )
 
-//Bank Component
-const BankComponent = (props) =>{
-  return (
-    <div id="bank-component">
-      <div id="bank-display">
-        <h5>{props.bank}</h5>
-      </div>
-      <button className="button-class" id="toggle-bank-button" onClick={props.toggleBank}>Bank</button>
-    </div>
+  return(
+    <div>{button_array}</div>
   )
 }
 
-//display component
-const DisplayComponent = (props) =>{
-  return (
-    <div id="display" class="col">
-      <h2 class="">{props.audioClipName}</h2>
-    </div>
-  )
-};
-
-
-//DrumPad Component
-class DrumPadComponent extends React.Component {
+class Calculator extends React.Component{
   constructor(props){
-    super(props);
+    super(props)
+    //state
 
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.playAudio = this.playAudio.bind(this);
+    //method bindings
+    this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyPress);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyPress);
-  }
-
-  handleKeyPress(e) {
-      switch (e.keyCode) {
-        case 32:
-          this.props.toggleBank();
-          break;
-        case 13:
-          this.props.togglePower();
-          break;
-        default:
-          if (e.keyCode === this.props.keyCode) {
-            this.playAudio();
-          }
-          break;
-      }
-  }
-
-
-  playAudio(){
-    
-    if(this.props.power){
-      const sound = document.getElementById(this.props.id); //grabs onto the audio element and stores it in sound
-      sound.currentTime = 0;
-      sound.play();
-
-      if(this.props.bank === "Piano-kit"){
-        this.props.updateDisplay(this.props.secName.replace(/-/g, ' '));
-      }
-      else{
-        this.props.updateDisplay(this.props.priName.replace(/-/g, ' '));
-      }
-      
-    }    
+  handleKeyPress(){
 
   }
 
   render(){
+    
     return(
-      <div id="drum-pad-gradient">
-        <button id={(this.props.bank === "Piano-kit")? this.props.secName : this.props.priName} className="drum-pad button-class" onClick={this.playAudio}> 
-        <p>{this.props.id}</p>
-        {(this.props.bank === "Piano-kit") ? <audio id={this.props.id} src={this.props.secSource} className="clip"></audio> : <audio id={this.props.id} src={this.props.priSource} className="clip"></audio>} 
-        </button>
+      <div>
+        <DisplayComponent/>
+        <CalculatorButtons item={key_array} />
       </div>
-      
     )
   }
-}
-
-//drumPad container component
-const DrumPadContainerComponent = (props) =>{
-    const drumPadList = props.item.map((item)=>(
-      <DrumPadComponent 
-        id={item.id}
-        secId={item.id+props.bank}
-        priName={item.priName} 
-        secName={item.secName}
-        priSource={item.priSource}
-        secSource={item.secSource} 
-        keyCode={item.keyCode}
-        updateDisplay={props.updateDisplay}
-        bank={props.bank}
-        power={props.power} 
-        toggleBank={props.toggleBank}
-        togglePower={props.togglePower}/> //for every element in array, create a drumPad and store passing props id, name and priSource to the component.
-    )
-    )
-    return (
-        <div id="drum-pad-container">{drumPadList}</div> //div is necessary because ele tranforms to multiple elements and multiple elements must be wrapped in one to be returned in JSX
-    )
 }
 
 class App extends React.Component{
@@ -280,56 +153,35 @@ class App extends React.Component{
     
     this.state = {
       power: false,
-      bank: "Heater-kit",
-      display: "Click a button"
+      display: "",
+      operand1set: false,
+      operator1set: false,
+      operand2set: false
     }
 
     this.togglePower = this.togglePower.bind(this);
-    this.toggleBank = this.toggleBank.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
   }
 
+  //handles AC button click
   togglePower(){
     this.setState(state =>({
       power: !state.power
     }))
   }
 
-  toggleBank(){
-    this.setState(state =>{
-      if(state.power){
-        if(state.bank === "Heater-kit"){
-          return({
-            bank: "Piano-kit",
-            display: "Piano-kit"
-          })
-        }
-        else{
-          return({
-            bank: "Heater-kit",
-            display: "Heater-kit"
-          })
-        }
-      }
-      
-    })
-
-  }
-
-  updateDisplay(name){
+  //updates the display according to click
+  updateDisplay(val){
     this.setState({
-      display: name
+      display: val
     })
   }
   
   render(){
     return(
-      <div id="drum-machine" >
+      <div id="calculator-machine" >
         <h3>MP1513-EO</h3>
-        <DisplayComponent audioClipName={this.state.display}/>
-        <DrumPadContainerComponent item={drumPadArr} togglePower={this.togglePower} toggleBank={this.toggleBank} updateDisplay={this.updateDisplay} bank={this.state.bank} power={this.state.power}/>
-        <PowerIndicatorComponent power={this.state.power} togglePower={this.togglePower}/>
-        <BankComponent power={this.state.power} toggleBank={this.toggleBank} bank={this.state.bank}/>
+        <Calculator />
       </div>
     ) 
   }
