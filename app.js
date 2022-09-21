@@ -50,40 +50,88 @@ INSTRUCTIONS:
 $(document).ready(function () {}); //React up and running
 
 var key_array = [{
-  id: "0"
+  id: "zero",
+  value: 0
 }, {
-  id: "1"
+  id: "one",
+  value: 1
 }, {
-  id: "2"
+  id: "two",
+  value: 2
 }, {
-  id: "3"
+  id: "three",
+  value: 3
 }, {
-  id: "4"
+  id: "four",
+  value: 4
 }, {
-  id: "5"
+  id: "five",
+  value: 5
 }, {
-  id: "6"
+  id: "six",
+  value: 6
 }, {
-  id: "7"
+  id: "seven",
+  value: 7
 }, {
-  id: "8"
+  id: "eight",
+  value: 8
 }, {
-  id: "9"
+  id: "nine",
+  value: 9
 }, {
-  id: "."
+  id: "decimal",
+  value: "."
 }, {
-  id: "x"
+  id: "multiply",
+  value: "x"
 }, {
-  id: "/"
+  id: "divide",
+  value: "/"
 }, {
-  id: "+"
+  id: "add",
+  value: "+"
 }, {
-  id: "-"
+  id: "subtract",
+  value: "-"
 }, {
-  id: "="
+  id: "equals",
+  value: "="
 }, {
-  id: "AC"
-}]; //displays inputs and results on screen
+  id: "clear",
+  value: "AC"
+}, {
+  id: "off",
+  value: "Off"
+}]; //power indicator component
+
+var PowerIndicatorComponent = function PowerIndicatorComponent(props) {
+  var powerOn = {
+    width: '10px',
+    height: '2px',
+    background: 'red'
+  };
+  var powerOff = {
+    width: '10px',
+    height: '2px',
+    background: '#f40'
+  };
+  var powerDefault = {
+    width: '10px',
+    height: '2px',
+    background: '#222'
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    id: "power-indicator"
+  }, /*#__PURE__*/React.createElement("div", {
+    id: "group-power-LED"
+  }, /*#__PURE__*/React.createElement("div", {
+    id: "power-on-LED",
+    className: "power-LED",
+    style: props.power ? powerOn : powerDefault
+  })));
+}; //displays inputs and results on screen
+
 
 var DisplayComponent = /*#__PURE__*/function (_React$Component) {
   _inherits(DisplayComponent, _React$Component);
@@ -93,30 +141,35 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
   function DisplayComponent(props) {
     _classCallCheck(this, DisplayComponent);
 
-    return _super.call(this, props); //render
-  }
+    return _super.call(this, props);
+  } //render 
+
 
   _createClass(DisplayComponent, [{
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
         id: "display",
-        "class": "col"
+        className: "col"
       }, /*#__PURE__*/React.createElement("h2", {
-        "class": ""
+        className: ""
       }, this.props.display));
     }
   }]);
 
   return DisplayComponent;
-}(React.Component); //calculator buttons component
+}(React.Component); //store button elements into an array and handle clicks appropriately
 
 
 var CalculatorButtons = function CalculatorButtons(props) {
   var button_array = props.item.map(function (item) {
     return /*#__PURE__*/React.createElement("button", {
-      onClick: props.handleClick
-    }, /*#__PURE__*/React.createElement("p", null, item.id));
+      key: item.value,
+      id: item.id,
+      onClick: function onClick() {
+        return props.handleClick(item.value);
+      }
+    }, /*#__PURE__*/React.createElement("p", null, item.value));
   });
   return /*#__PURE__*/React.createElement("div", null, button_array);
 };
@@ -131,21 +184,56 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
 
     _classCallCheck(this, Calculator);
 
-    _this = _super2.call(this, props); //state
-    //method bindings
+    _this = _super2.call(this, props); //method bindings
 
-    _this.handleKeyPress = _this.handleKeyPress.bind(_assertThisInitialized(_this));
+    _this.onButtonClickHandler = _this.onButtonClickHandler.bind(_assertThisInitialized(_this));
     return _this;
-  }
+  } //handles click of each button.
+
 
   _createClass(Calculator, [{
-    key: "handleKeyPress",
-    value: function handleKeyPress() {}
+    key: "onButtonClickHandler",
+    value: function onButtonClickHandler(value) {
+      switch (value) {
+        case "AC":
+          if (this.props.power) {
+            this.props.resetCalculator();
+          } else {
+            this.props.togglePower(); // this.props.resetCalculator();//turn the calculator off, either do so with extra button
+          }
+
+          break;
+
+        case "Off":
+          if (this.props.power) {
+            this.props.togglePower();
+          }
+
+          break;
+
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+          if (this.props.power) {
+            this.props.setOperands(value);
+          }
+
+          break;
+      }
+    }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(DisplayComponent, null), /*#__PURE__*/React.createElement(CalculatorButtons, {
-        item: key_array
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(CalculatorButtons, {
+        item: key_array,
+        handleClick: this.onButtonClickHandler
       }));
     }
   }]);
@@ -167,14 +255,18 @@ var App = /*#__PURE__*/function (_React$Component3) {
     _this2.state = {
       power: false,
       display: "",
+      operand1: "",
+      operand2: "",
+      operator1: "",
       operand1set: false,
       operator1set: false,
       operand2set: false
     };
     _this2.togglePower = _this2.togglePower.bind(_assertThisInitialized(_this2));
     _this2.updateDisplay = _this2.updateDisplay.bind(_assertThisInitialized(_this2));
+    _this2.resetCalculator = _this2.resetCalculator.bind(_assertThisInitialized(_this2));
     return _this2;
-  } //handles AC button click
+  } //turns calculator on, sets display to 0: or off, sets display to ""
 
 
   _createClass(App, [{
@@ -182,7 +274,8 @@ var App = /*#__PURE__*/function (_React$Component3) {
     value: function togglePower() {
       this.setState(function (state) {
         return {
-          power: !state.power
+          power: !state.power,
+          display: state.power ? "" : "0"
         };
       });
     } //updates the display according to click
@@ -193,13 +286,93 @@ var App = /*#__PURE__*/function (_React$Component3) {
       this.setState({
         display: val
       });
+    } //Handle AC click
+
+  }, {
+    key: "resetCalculator",
+    value: function resetCalculator() {
+      this.setState({
+        power: true,
+        display: "0",
+        operand1: "",
+        operand2: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      });
+    }
+  }, {
+    key: "setOperands",
+    value: function setOperands(val) {
+      this.setState(function (state) {
+        if (!state.operand1set) {
+          return {
+            display: operand1 + operator1 + operand2,
+            operand1: state.operand1 + val,
+            operand2: "",
+            operator1: "",
+            operand1set: false,
+            operator1set: false,
+            operand2set: false //operand1 gets finished and set true when operator is pressed
+
+          };
+        } else {
+          return {
+            display: operand1 + operator1 + operand2,
+            operand2: state.operand2 + val,
+            operand1set: true,
+            operator1set: true,
+            //operator1 gets finished and set true when operand2 is pressed
+            operand2set: false
+          };
+        }
+      });
+    }
+  }, {
+    key: "setOperators",
+    value: function setOperators(val) {
+      this.setState(function (state) {
+        if (!state.operator1set) {
+          return {
+            display: operand1 + operator1 + operand2,
+            operand2: "",
+            operator1: val,
+            operand1set: true,
+            operator1set: false,
+            operand2set: false //operand1 gets finished and set true when operator is pressed
+
+          };
+        } else {
+          return {
+            display: operand1 + operator1 + operand2,
+            operand1set: true,
+            operator1set: true,
+            operand2set: true //operand1 gets finished and set true when operator is pressed
+
+          };
+        }
+      });
     }
   }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
         id: "calculator-machine"
-      }, /*#__PURE__*/React.createElement("h3", null, "MP1513-EO"), /*#__PURE__*/React.createElement(Calculator, null));
+      }, /*#__PURE__*/React.createElement("h3", null, "MP1513-EO"), /*#__PURE__*/React.createElement(PowerIndicatorComponent, {
+        power: this.state.power,
+        togglePower: this.togglePower
+      }), /*#__PURE__*/React.createElement(DisplayComponent, {
+        display: this.state.display
+      }), /*#__PURE__*/React.createElement(Calculator, {
+        togglePower: this.togglePower,
+        updateDisplay: this.updateDisplay,
+        resetCalculator: this.resetCalculator,
+        setOperands: this.setOperands,
+        setOperators: this.setOperators,
+        power: this.state.power,
+        display: this.state.display
+      }));
     }
   }]);
 

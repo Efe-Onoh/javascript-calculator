@@ -38,82 +38,132 @@ $(document).ready(()=>{
 
 const key_array = [
   {
-    id: "0"
+    id: "zero",
+    value: 0
   },
   {
-    id: "1"
+    id: "one",
+    value: 1
   },
   {
-    id: "2"
+    id: "two",
+    value: 2
   },
   {
-    id: "3"
+    id: "three",
+    value: 3
   },
   {
-    id: "4"
+    id: "four",
+    value: 4
   },
   {
-    id: "5"
+    id: "five",
+    value: 5
   },
   {
-    id: "6"
+    id: "six",
+    value: 6
   },
   {
-    id: "7"
+    id: "seven",
+    value: 7
   },
   {
-    id: "8"
+    id: "eight",
+    value: 8
   },
   {
-    id: "9"
+    id: "nine",
+    value: 9
   },
   {
-    id: "."
+    id: "decimal",
+    value: "."
   },
   {
-    id: "x"
+    id: "multiply",
+    value: "x"
   },
   {
-    id: "/"
+    id: "divide",
+    value: "/"
   },
   {
-    id: "+"
+    id: "add",
+    value: "+"
   },
   {
-    id: "-"
+    id: "subtract",
+    value: "-"
   },
   {
-    id: "="
+    id: "equals",
+    value:"=" 
   },
   {
-    id: "AC"
+    id: "clear",
+    value: "AC"
   },
+  {
+    id: "off",
+    value: "Off"
+  }
 ]
 
+//power indicator component
+const PowerIndicatorComponent = (props) =>{
+
+  const powerOn = {
+    width: '10px',
+    height: '2px',
+    background: 'red'
+  }
+
+  const powerOff = {
+    width: '10px',
+    height: '2px',
+    background: '#f40'
+  }
+
+  const powerDefault = {
+    width: '10px',
+    height: '2px',
+    background: '#222'
+  }
+
+  return (
+    <div id="power-indicator">
+      <div id="group-power-LED">
+        <div id="power-on-LED" className="power-LED" style={props.power ? powerOn : powerDefault}></div>
+      </div>     
+    </div>
+  )
+};
 
 //displays inputs and results on screen
 class DisplayComponent extends React.Component{
   constructor(props){
     super(props)
 
-  //render
-  }
   
+  }
+ //render 
   render(){
     return (
-      <div id="display" class="col">
-        <h2 class="">{this.props.display}</h2>
+      <div id="display" className="col">
+        <h2 className="">{this.props.display}</h2>
       </div>
     )
   }
 
 }
 
-//calculator buttons component
+//store button elements into an array and handle clicks appropriately
 const CalculatorButtons = (props) =>{
   const button_array = props.item.map((item)=>(
-  <button onClick={props.handleClick}>
-    <p>{item.id}</p>
+  <button key={item.value} id={item.id} onClick={()=>props.handleClick(item.value)}>
+    <p>{item.value}</p>
   </button>
   )
   )
@@ -126,22 +176,51 @@ const CalculatorButtons = (props) =>{
 class Calculator extends React.Component{
   constructor(props){
     super(props)
-    //state
 
     //method bindings
-    this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.onButtonClickHandler = this.onButtonClickHandler.bind(this)
   }
 
-  handleKeyPress(){
-
+  //handles click of each button.
+  onButtonClickHandler(value){
+    switch(value){
+      case "AC":
+        if(this.props.power){
+          this.props.resetCalculator()
+        }
+        else{
+          this.props.togglePower();
+          // this.props.resetCalculator();//turn the calculator off, either do so with extra button
+        }
+        break
+      case "Off":
+        if(this.props.power){
+          this.props.togglePower()
+        }
+        break
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+        if(this.props.power){
+          this.props.setOperands(value)
+        }
+        break
+        
+    }
   }
 
   render(){
     
     return(
       <div>
-        <DisplayComponent/>
-        <CalculatorButtons item={key_array} />
+        <CalculatorButtons item={key_array} handleClick={this.onButtonClickHandler} />
       </div>
     )
   }
@@ -154,6 +233,9 @@ class App extends React.Component{
     this.state = {
       power: false,
       display: "",
+      operand1: "",
+      operand2: "",
+      operator1: "",
       operand1set: false,
       operator1set: false,
       operand2set: false
@@ -161,12 +243,14 @@ class App extends React.Component{
 
     this.togglePower = this.togglePower.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
+    this.resetCalculator = this.resetCalculator.bind(this);
   }
 
-  //handles AC button click
+  //turns calculator on, sets display to 0: or off, sets display to ""
   togglePower(){
     this.setState(state =>({
-      power: !state.power
+      power: !state.power,
+      display: state.power? "" : "0"
     }))
   }
 
@@ -176,12 +260,82 @@ class App extends React.Component{
       display: val
     })
   }
+
+  //Handle AC click
+  resetCalculator(){
+    this.setState({
+      power: true,
+      display: "0",
+      operand1: "",
+      operand2: "",
+      operator1: "",
+      operand1set: false,
+      operator1set: false,
+      operand2set: false
+    })
+  }
   
+  setOperands(val){
+    this.setState(state=>{
+      if(!state.operand1set){
+        return({
+          display: operand1+operator1+operand2,
+          operand1: state.operand1+val,
+          operand2: "",
+          operator1: "",
+          operand1set: false,
+          operator1set: false,
+          operand2set: false //operand1 gets finished and set true when operator is pressed
+        })
+      }
+      else{
+        return({
+          display: operand1+operator1+operand2,
+          operand2: state.operand2+val,
+          operand1set: true,
+          operator1set: true,//operator1 gets finished and set true when operand2 is pressed
+          operand2set: false
+        })
+      }
+    })
+  }
+
+  setOperators(val){
+    this.setState(state=>{
+      if(!state.operator1set){
+        return({
+          display: operand1+operator1+operand2,
+          operand2: "",
+          operator1: val,
+          operand1set: true,
+          operator1set: false,
+          operand2set: false //operand1 gets finished and set true when operator is pressed
+        })
+      }
+      else{
+        return({
+          display: operand1+operator1+operand2,
+          operand1set: true,
+          operator1set: true,
+          operand2set: true //operand1 gets finished and set true when operator is pressed
+        })
+      }
+    })
+  }
+
   render(){
     return(
       <div id="calculator-machine" >
         <h3>MP1513-EO</h3>
-        <Calculator />
+        <PowerIndicatorComponent power={this.state.power} togglePower={this.togglePower}/>
+        <DisplayComponent display={this.state.display}/>
+        <Calculator togglePower={this.togglePower} 
+        updateDisplay={this.updateDisplay} 
+        resetCalculator={this.resetCalculator} 
+        setOperands={this.setOperands} 
+        setOperators={this.setOperators} 
+        power={this.state.power} 
+        display={this.state.display}/>
       </div>
     ) 
   }
