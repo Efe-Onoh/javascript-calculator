@@ -39,43 +39,43 @@ $(document).ready(()=>{
 const key_array = [
   {
     id: "zero",
-    value: 0
+    value: "0"
   },
   {
     id: "one",
-    value: 1
+    value: "1"
   },
   {
     id: "two",
-    value: 2
+    value: "2"
   },
   {
     id: "three",
-    value: 3
+    value: "3"
   },
   {
     id: "four",
-    value: 4
+    value: "4"
   },
   {
     id: "five",
-    value: 5
+    value: "5"
   },
   {
     id: "six",
-    value: 6
+    value: "6"
   },
   {
     id: "seven",
-    value: 7
+    value: "7"
   },
   {
     id: "eight",
-    value: 8
+    value: "8"
   },
   {
     id: "nine",
-    value: 9
+    value: "9"
   },
   {
     id: "decimal",
@@ -162,9 +162,12 @@ class DisplayComponent extends React.Component{
 //store button elements into an array and handle clicks appropriately
 const CalculatorButtons = (props) =>{
   const button_array = props.item.map((item)=>(
-  <button key={item.value} id={item.id} onClick={()=>props.handleClick(item.value)}>
+  <div id="key-pad-gradient">
+    <button className="key-pad button-class" key={item.value} id={item.id} onClick={()=>props.handleClick(item.value)}>
     <p>{item.value}</p>
-  </button>
+    </button>
+  </div>
+  
   )
   )
 
@@ -190,7 +193,6 @@ class Calculator extends React.Component{
         }
         else{
           this.props.togglePower();
-          // this.props.resetCalculator();//turn the calculator off, either do so with extra button
         }
         break
       case "Off":
@@ -198,21 +200,28 @@ class Calculator extends React.Component{
           this.props.togglePower()
         }
         break
-      case 0:
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
+      case "0":
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
         if(this.props.power){
           this.props.setOperands(value)
         }
         break
-        
+      case "/":
+      case "x":
+      case "+":
+      case "-":
+        if(this.props.power){
+          this.props.setOperators(value)
+        }
+        break
     }
   }
 
@@ -244,6 +253,8 @@ class App extends React.Component{
     this.togglePower = this.togglePower.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
     this.resetCalculator = this.resetCalculator.bind(this);
+    this.setOperands = this.setOperands.bind(this);
+    this.setOperators = this.setOperators.bind(this);
   }
 
   //turns calculator on, sets display to 0: or off, sets display to ""
@@ -279,7 +290,7 @@ class App extends React.Component{
     this.setState(state=>{
       if(!state.operand1set){
         return({
-          display: operand1+operator1+operand2,
+          display: state.operand1+val+state.operator1+state.operand2,//get the current value for display
           operand1: state.operand1+val,
           operand2: "",
           operator1: "",
@@ -290,7 +301,7 @@ class App extends React.Component{
       }
       else{
         return({
-          display: operand1+operator1+operand2,
+          display: state.operand1+state.operator1+state.operand2+val,
           operand2: state.operand2+val,
           operand1set: true,
           operator1set: true,//operator1 gets finished and set true when operand2 is pressed
@@ -302,9 +313,9 @@ class App extends React.Component{
 
   setOperators(val){
     this.setState(state=>{
-      if(!state.operator1set){
+      if(!state.operator1set){//if operator1 is not set, set operator 1
         return({
-          display: operand1+operator1+operand2,
+          display: state.operand1+val+state.operand2,
           operand2: "",
           operator1: val,
           operand1set: true,
@@ -313,11 +324,31 @@ class App extends React.Component{
         })
       }
       else{
+        var result
+        switch(state.operator1){
+          case "x":
+            result = parseInt(state.operand1)*parseInt(state.operand2)
+            break
+          case "/":
+            result = parseInt(state.operand1)/parseInt(state.operand2)
+            break
+          case "+":
+            result = parseInt(state.operand1)+parseInt(state.operand2)
+            break
+          case "-":
+            result = parseInt(state.operand1)-parseInt(state.operand2)
+            break
+        }
         return({
-          display: operand1+operator1+operand2,
+          display: result+val,
+          //operand1 should get result of evaluating prevop1+oprt1+op2
+          //operator1 should now get operatorpassed
+          operand1: result,
+          operand2: "",
+          operator1: val,
           operand1set: true,
-          operator1set: true,
-          operand2set: true //operand1 gets finished and set true when operator is pressed
+          operator1set: false,
+          operand2set: false
         })
       }
     })

@@ -51,34 +51,34 @@ $(document).ready(function () {}); //React up and running
 
 var key_array = [{
   id: "zero",
-  value: 0
+  value: "0"
 }, {
   id: "one",
-  value: 1
+  value: "1"
 }, {
   id: "two",
-  value: 2
+  value: "2"
 }, {
   id: "three",
-  value: 3
+  value: "3"
 }, {
   id: "four",
-  value: 4
+  value: "4"
 }, {
   id: "five",
-  value: 5
+  value: "5"
 }, {
   id: "six",
-  value: 6
+  value: "6"
 }, {
   id: "seven",
-  value: 7
+  value: "7"
 }, {
   id: "eight",
-  value: 8
+  value: "8"
 }, {
   id: "nine",
-  value: 9
+  value: "9"
 }, {
   id: "decimal",
   value: "."
@@ -163,13 +163,16 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
 
 var CalculatorButtons = function CalculatorButtons(props) {
   var button_array = props.item.map(function (item) {
-    return /*#__PURE__*/React.createElement("button", {
+    return /*#__PURE__*/React.createElement("div", {
+      id: "key-pad-gradient"
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "key-pad button-class",
       key: item.value,
       id: item.id,
       onClick: function onClick() {
         return props.handleClick(item.value);
       }
-    }, /*#__PURE__*/React.createElement("p", null, item.value));
+    }, /*#__PURE__*/React.createElement("p", null, item.value)));
   });
   return /*#__PURE__*/React.createElement("div", null, button_array);
 };
@@ -199,7 +202,7 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
           if (this.props.power) {
             this.props.resetCalculator();
           } else {
-            this.props.togglePower(); // this.props.resetCalculator();//turn the calculator off, either do so with extra button
+            this.props.togglePower();
           }
 
           break;
@@ -211,18 +214,28 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
 
           break;
 
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
           if (this.props.power) {
             this.props.setOperands(value);
+          }
+
+          break;
+
+        case "/":
+        case "x":
+        case "+":
+        case "-":
+          if (this.props.power) {
+            this.props.setOperators(value);
           }
 
           break;
@@ -265,6 +278,8 @@ var App = /*#__PURE__*/function (_React$Component3) {
     _this2.togglePower = _this2.togglePower.bind(_assertThisInitialized(_this2));
     _this2.updateDisplay = _this2.updateDisplay.bind(_assertThisInitialized(_this2));
     _this2.resetCalculator = _this2.resetCalculator.bind(_assertThisInitialized(_this2));
+    _this2.setOperands = _this2.setOperands.bind(_assertThisInitialized(_this2));
+    _this2.setOperators = _this2.setOperators.bind(_assertThisInitialized(_this2));
     return _this2;
   } //turns calculator on, sets display to 0: or off, sets display to ""
 
@@ -308,7 +323,8 @@ var App = /*#__PURE__*/function (_React$Component3) {
       this.setState(function (state) {
         if (!state.operand1set) {
           return {
-            display: operand1 + operator1 + operand2,
+            display: state.operand1 + val + state.operator1 + state.operand2,
+            //get the current value for display
             operand1: state.operand1 + val,
             operand2: "",
             operator1: "",
@@ -319,7 +335,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
           };
         } else {
           return {
-            display: operand1 + operator1 + operand2,
+            display: state.operand1 + state.operator1 + state.operand2 + val,
             operand2: state.operand2 + val,
             operand1set: true,
             operator1set: true,
@@ -334,8 +350,9 @@ var App = /*#__PURE__*/function (_React$Component3) {
     value: function setOperators(val) {
       this.setState(function (state) {
         if (!state.operator1set) {
+          //if operator1 is not set, set operator 1
           return {
-            display: operand1 + operator1 + operand2,
+            display: state.operand1 + val + state.operand2,
             operand2: "",
             operator1: val,
             operand1set: true,
@@ -344,12 +361,36 @@ var App = /*#__PURE__*/function (_React$Component3) {
 
           };
         } else {
-          return {
-            display: operand1 + operator1 + operand2,
-            operand1set: true,
-            operator1set: true,
-            operand2set: true //operand1 gets finished and set true when operator is pressed
+          var result;
 
+          switch (state.operator1) {
+            case "x":
+              result = parseInt(state.operand1) * parseInt(state.operand2);
+              break;
+
+            case "/":
+              result = parseInt(state.operand1) / parseInt(state.operand2);
+              break;
+
+            case "+":
+              result = parseInt(state.operand1) + parseInt(state.operand2);
+              break;
+
+            case "-":
+              result = parseInt(state.operand1) - parseInt(state.operand2);
+              break;
+          }
+
+          return {
+            display: result + val,
+            //operand1 should get result of evaluating prevop1+oprt1+op2
+            //operator1 should now get operatorpassed
+            operand1: result,
+            operand2: "",
+            operator1: val,
+            operand1set: true,
+            operator1set: false,
+            operand2set: false
           };
         }
       });

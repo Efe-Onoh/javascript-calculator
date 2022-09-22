@@ -91,13 +91,13 @@ body {
   color: white;
 }
 
-#drum-pad-gradient {
+#key-pad-gradient {
   display: inline-flex;
   justify-content: center;
   width: 31%;
   height: fit-content;
-  padding: 4px;
-  margin: 1%;
+  padding: 4x;
+  margin: 0;
 }
 
 /*# sourceMappingURL=app.css.map */
