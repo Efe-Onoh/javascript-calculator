@@ -239,6 +239,13 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
           }
 
           break;
+
+        case "=":
+          if (this.props.power) {
+            this.props.handleEquals();
+          }
+
+          break;
       }
     }
   }, {
@@ -280,6 +287,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
     _this2.resetCalculator = _this2.resetCalculator.bind(_assertThisInitialized(_this2));
     _this2.setOperands = _this2.setOperands.bind(_assertThisInitialized(_this2));
     _this2.setOperators = _this2.setOperators.bind(_assertThisInitialized(_this2));
+    _this2.handleEquals = _this2.handleEquals.bind(_assertThisInitialized(_this2));
     return _this2;
   } //turns calculator on, sets display to 0: or off, sets display to ""
 
@@ -396,6 +404,40 @@ var App = /*#__PURE__*/function (_React$Component3) {
       });
     }
   }, {
+    key: "handleEquals",
+    value: function handleEquals() {
+      console.log(this.state);
+      var result;
+
+      if (this.state.operand1 == "" || this.state.operand2 == "" || this.state.operator1 == "") {
+        this.updateDisplay(this.state.display);
+      } else {
+        switch (this.state.operator1) {
+          case "x":
+            result = Number(this.state.operand1) * Number(this.state.operand2);
+            this.updateDisplay(result);
+            break;
+
+          case "/":
+            result = Number(this.state.operand1) / Number(this.state.operand2);
+            this.updateDisplay(result);
+            break;
+
+          case "+":
+            result = Number(this.state.operand1) + Number(this.state.operand2);
+            this.updateDisplay(result);
+            break;
+
+          case "-":
+            result = Number(this.state.operand1) - Number(this.state.operand2);
+            this.updateDisplay(result);
+            break;
+        }
+      }
+
+      console.log(this.state);
+    }
+  }, {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
@@ -411,6 +453,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
         resetCalculator: this.resetCalculator,
         setOperands: this.setOperands,
         setOperators: this.setOperators,
+        handleEquals: this.handleEquals,
         power: this.state.power,
         display: this.state.display
       }));
@@ -476,5 +519,7 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 }(React.Component);
 
 ;
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //implement power key and bank keys
-//implement redux and react redux, make it do a little more like fast response?
+ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //basic arithmetic added
+//implement equals =
+//implement decimal
+//strip leading 0s from operands before evaluation

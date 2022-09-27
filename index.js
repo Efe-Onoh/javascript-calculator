@@ -222,6 +222,11 @@ class Calculator extends React.Component{
           this.props.setOperators(value)
         }
         break
+      case "=":
+        if(this.props.power){
+          this.props.handleEquals()
+        }
+        break
     }
   }
 
@@ -255,6 +260,7 @@ class App extends React.Component{
     this.resetCalculator = this.resetCalculator.bind(this);
     this.setOperands = this.setOperands.bind(this);
     this.setOperators = this.setOperators.bind(this);
+    this.handleEquals = this.handleEquals.bind(this);
   }
 
   //turns calculator on, sets display to 0: or off, sets display to ""
@@ -354,6 +360,35 @@ class App extends React.Component{
     })
   }
 
+  handleEquals(){
+    console.log(this.state)
+    var result 
+    if(this.state.operand1=="" || this.state.operand2=="" || this.state.operator1 == ""){
+      this.updateDisplay(this.state.display)
+    }
+    else{
+      switch(this.state.operator1){
+        case "x":
+          result = Number(this.state.operand1)*Number(this.state.operand2)
+          this.updateDisplay(result)
+          break
+        case "/":
+          result = Number(this.state.operand1)/Number(this.state.operand2)
+          this.updateDisplay(result)
+          break
+        case "+":
+          result = Number(this.state.operand1)+Number(this.state.operand2)
+          this.updateDisplay(result)
+          break
+        case "-":
+          result = Number(this.state.operand1)-Number(this.state.operand2)
+          this.updateDisplay(result)
+          break
+      }
+    } 
+    console.log(this.state)
+  }
+
   render(){
     return(
       <div id="calculator-machine" >
@@ -364,7 +399,8 @@ class App extends React.Component{
         updateDisplay={this.updateDisplay} 
         resetCalculator={this.resetCalculator} 
         setOperands={this.setOperands} 
-        setOperators={this.setOperators} 
+        setOperators={this.setOperators}
+        handleEquals={this.handleEquals} 
         power={this.state.power} 
         display={this.state.display}/>
       </div>
@@ -403,5 +439,7 @@ class AppWrapper extends React.Component {
 
 ReactDOM.render(<App/>, document.querySelector('#root'));
 
-//implement power key and bank keys
-//implement redux and react redux, make it do a little more like fast response?
+//basic arithmetic added
+//implement equals =
+//implement decimal
+//strip leading 0s from operands before evaluation
