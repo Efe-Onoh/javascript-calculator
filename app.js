@@ -151,7 +151,7 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
       return /*#__PURE__*/React.createElement("div", {
         id: "display",
         className: "col"
-      }, /*#__PURE__*/React.createElement("h2", {
+      }, /*#__PURE__*/React.createElement("h5", {
         className: ""
       }, this.props.display));
     }
@@ -442,7 +442,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
         id: "calculator-machine"
-      }, /*#__PURE__*/React.createElement("h3", null, "MP1513-EO"), /*#__PURE__*/React.createElement(PowerIndicatorComponent, {
+      }, /*#__PURE__*/React.createElement("h5", null, "MP1513-EO"), /*#__PURE__*/React.createElement(PowerIndicatorComponent, {
         power: this.state.power,
         togglePower: this.togglePower
       }), /*#__PURE__*/React.createElement(DisplayComponent, {
@@ -519,7 +519,5 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 }(React.Component);
 
 ;
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //basic arithmetic added
-//implement equals =
-//implement decimal
+ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //implement decimal
 //strip leading 0s from operands before evaluation

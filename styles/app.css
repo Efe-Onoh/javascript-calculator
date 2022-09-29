@@ -4,7 +4,7 @@
 }
 
 body {
-  color: #333333;
+  color: #fff;
   background: #eee;
   display: flex;
   justify-content: center;
@@ -12,92 +12,39 @@ body {
   padding: 50px;
 }
 
-#drum-machine {
-  color: #fff;
-  background: #222;
-  border: 5px outset #999;
-  padding: 30px;
-  width: 500px;
+#calculator-machine {
+  background: #113;
+  padding: 10px 5px;
+  width: 300px;
 }
 
-#drum-machine h3 {
+#calculator-machine h5 {
   font-family: "Orbitron", sans-serif;
 }
 
 #display {
+  height: 40px;
   background: #444;
-  border: 5px inset #888;
-  padding: 10px;
+  border: 2px solid #888;
   font-family: "Silkscreen", cursive;
 }
 
-#display h2 {
+#display h5 {
   opacity: 1;
   color: #fff;
-}
-
-#bank-component {
-  background: #bbb;
-  border: 3px outset #f10;
-  padding: 10px;
-  margin: 10px 0;
-}
-
-#bank-display {
-  background: #444;
-  opacity: 0.6;
-  border: 5px inset #777;
-  padding: 10px;
-  margin: 10px 0;
   font-family: "Silkscreen", cursive;
 }
 
-#bank-display h5 {
-  opacity: 1;
-  color: #fff;
+#key-pad-gradient {
+  display: inline-block;
+}
+
+.key-pad {
+  width: 70px;
 }
 
 .power-LED {
   display: inline-block;
-  margin: 0px 10px;
-}
-
-.button-class {
-  padding: 5px;
-}
-
-#drum-pad-container {
-  border: 2px inset #faa;
-  border-radius: 5px;
-  width: 100%;
-  margin: 10px 0;
-}
-
-.drum-pad {
-  display: flex;
-  width: 100%;
-  height: 100px;
-  background: #111;
-  border: 3px solid #f10;
-  border-radius: 2px;
-  font-family: "Poppins", sans-serif;
-}
-
-.drum-pad:hover {
-  background: #faa;
-}
-
-.drum-pad p {
-  color: white;
-}
-
-#key-pad-gradient {
-  display: inline-flex;
-  justify-content: center;
-  width: 31%;
-  height: fit-content;
-  padding: 4x;
-  margin: 0;
 }
 
 /*# sourceMappingURL=app.css.map */

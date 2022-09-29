@@ -152,7 +152,7 @@ class DisplayComponent extends React.Component{
   render(){
     return (
       <div id="display" className="col">
-        <h2 className="">{this.props.display}</h2>
+        <h5 className="">{this.props.display}</h5>
       </div>
     )
   }
@@ -392,7 +392,7 @@ class App extends React.Component{
   render(){
     return(
       <div id="calculator-machine" >
-        <h3>MP1513-EO</h3>
+        <h5>MP1513-EO</h5>
         <PowerIndicatorComponent power={this.state.power} togglePower={this.togglePower}/>
         <DisplayComponent display={this.state.display}/>
         <Calculator togglePower={this.togglePower} 
@@ -439,7 +439,5 @@ class AppWrapper extends React.Component {
 
 ReactDOM.render(<App/>, document.querySelector('#root'));
 
-//basic arithmetic added
-//implement equals =
 //implement decimal
 //strip leading 0s from operands before evaluation
