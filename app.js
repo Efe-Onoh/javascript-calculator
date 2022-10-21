@@ -224,6 +224,7 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
         case "7":
         case "8":
         case "9":
+        case ".":
           if (this.props.power) {
             this.props.setOperands(value);
           }
@@ -233,9 +234,15 @@ var Calculator = /*#__PURE__*/function (_React$Component2) {
         case "/":
         case "x":
         case "+":
-        case "-":
           if (this.props.power) {
             this.props.setOperators(value);
+          }
+
+          break;
+
+        case "-":
+          if (this.props.power) {
+            this.props.handleMinus(value);
           }
 
           break;
@@ -277,6 +284,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
       display: "",
       operand1: "",
       operand2: "",
+      prevOprt1: "",
       operator1: "",
       operand1set: false,
       operator1set: false,
@@ -288,6 +296,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
     _this2.setOperands = _this2.setOperands.bind(_assertThisInitialized(_this2));
     _this2.setOperators = _this2.setOperators.bind(_assertThisInitialized(_this2));
     _this2.handleEquals = _this2.handleEquals.bind(_assertThisInitialized(_this2));
+    _this2.handleMinus = _this2.handleMinus.bind(_assertThisInitialized(_this2));
     return _this2;
   } //turns calculator on, sets display to 0: or off, sets display to ""
 
@@ -319,6 +328,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
         display: "0",
         operand1: "",
         operand2: "",
+        prevOprt1: "",
         operator1: "",
         operand1set: false,
         operator1set: false,
@@ -330,11 +340,17 @@ var App = /*#__PURE__*/function (_React$Component3) {
     value: function setOperands(val) {
       this.setState(function (state) {
         if (!state.operand1set) {
+          //remove additional leading 0s and additional decimal points
+          var op1 = state.operand1 + val;
+          var decimalIndex = op1.search(/\./);
+          op1 = op1.substring(0, decimalIndex + 1) + op1.substring(decimalIndex + 1).replace(/\.+/, '');
+          op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.');
           return {
-            display: state.operand1 + val + state.operator1 + state.operand2,
+            display: op1 + state.operator1 + state.operand2,
             //get the current value for display
-            operand1: state.operand1 + val,
+            operand1: op1,
             operand2: "",
+            prevOprt1: state.operator1,
             operator1: "",
             operand1set: false,
             operator1set: false,
@@ -342,9 +358,16 @@ var App = /*#__PURE__*/function (_React$Component3) {
 
           };
         } else {
+          //remove additional leading 0s and additional decimal points
+          var op2 = state.operand2 + val;
+
+          var _decimalIndex = op2.search(/\./);
+
+          op2 = op2.substring(0, _decimalIndex + 1) + op2.substring(_decimalIndex + 1).replace(/\.+/, '');
+          op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.');
           return {
-            display: state.operand1 + state.operator1 + state.operand2 + val,
-            operand2: state.operand2 + val,
+            display: state.operand1 + state.operator1 + op2,
+            operand2: op2,
             operand1set: true,
             operator1set: true,
             //operator1 gets finished and set true when operand2 is pressed
@@ -358,48 +381,86 @@ var App = /*#__PURE__*/function (_React$Component3) {
     value: function setOperators(val) {
       this.setState(function (state) {
         if (!state.operator1set) {
-          //if operator1 is not set, set operator 1
-          return {
-            display: state.operand1 + val + state.operand2,
-            operand2: "",
-            operator1: val,
-            operand1set: true,
-            operator1set: false,
-            operand2set: false //operand1 gets finished and set true when operator is pressed
+          //if operator1 is not finalized, set operator 1
+          if (state.operand1 == "-" || state.operand1 == "") {
+            //someone pushed an operator first or immediately after pushing - , don't set operator in this case
+            return {
+              display: state.operand1 + "" + state.operand2,
+              operand2: "",
+              prevOprt1: state.operator1,
+              operator1: "",
+              operand1set: false,
+              //operand 1 is not finalized
+              operator1set: false,
+              operand2set: false //operand1 gets finished and set true when operator is pressed
 
-          };
-        } else {
-          var result;
+            };
+          } else {
+            //operand1 is valid, set operator
+            return {
+              display: state.operand1 + val + state.operand2,
+              operand2: "",
+              prevOprt1: state.operator1,
+              operator1: val,
+              operand1set: true,
+              //finalize operand1
+              operator1set: false,
+              operand2set: false //operand1 gets finished and set true when operator is pressed
 
-          switch (state.operator1) {
-            case "x":
-              result = parseInt(state.operand1) * parseInt(state.operand2);
-              break;
-
-            case "/":
-              result = parseInt(state.operand1) / parseInt(state.operand2);
-              break;
-
-            case "+":
-              result = parseInt(state.operand1) + parseInt(state.operand2);
-              break;
-
-            case "-":
-              result = parseInt(state.operand1) - parseInt(state.operand2);
-              break;
+            };
           }
+        } else {
+          //if operator1 is set, set operator2
+          if (state.operand2 == "-") {
+            //someone clicked an operator immediately after clicking - for operand2 - 
+            return {
+              display: state.operand1 + val + "",
+              operand2: "",
+              prevOprt1: "-",
+              //take the - used as last operator
+              operator1: val,
+              //operator 1 becomes the operator pressed.
+              operand1set: true,
+              operator1set: false,
+              //operator1 still not finalized
+              operand2set: false //operand1 gets finished and set true when operator is pressed
 
-          return {
-            display: result + val,
-            //operand1 should get result of evaluating prevop1+oprt1+op2
-            //operator1 should now get operatorpassed
-            operand1: result,
-            operand2: "",
-            operator1: val,
-            operand1set: true,
-            operator1set: false,
-            operand2set: false
-          };
+            };
+          } else {
+            //operand2 was valid, evaluate, and make operator operator1 for result.
+            var result;
+
+            switch (state.operator1) {
+              case "x":
+                result = parseFloat(state.operand1) * parseFloat(state.operand2);
+                break;
+
+              case "/":
+                result = parseFloat(state.operand1) / parseFloat(state.operand2);
+                break;
+
+              case "+":
+                result = Number(state.operand1) + Number(state.operand2);
+                break;
+
+              case "-":
+                result = Number(state.operand1) - Number(state.operand2);
+                break;
+            }
+
+            return {
+              display: result + val,
+              //operand1 should get result of evaluating prevop1+oprt1+op2
+              //operator1 should now get operatorpassed
+              operand1: result,
+              operand2: "",
+              prevOprt1: state.operator1,
+              operator1: val,
+              operand1set: true,
+              operator1set: false,
+              operand2set: false
+            };
+          }
         }
       });
     }
@@ -409,33 +470,61 @@ var App = /*#__PURE__*/function (_React$Component3) {
       console.log(this.state);
       var result;
 
-      if (this.state.operand1 == "" || this.state.operand2 == "" || this.state.operator1 == "") {
-        this.updateDisplay(this.state.display);
+      if (this.state.operand1 == "" || this.state.operand2 == "" || this.state.operator1 == "") {//this.updateDisplay(this.state.display)//if any is in initial state, display what was last displayed
       } else {
         switch (this.state.operator1) {
           case "x":
-            result = Number(this.state.operand1) * Number(this.state.operand2);
-            this.updateDisplay(result);
+            result = parseFloat(this.state.operand1) * parseFloat(this.state.operand2); // this.updateDisplay(result)
+
             break;
 
           case "/":
-            result = Number(this.state.operand1) / Number(this.state.operand2);
-            this.updateDisplay(result);
+            result = parseFloat(this.state.operand1) / parseFloat(this.state.operand2); // this.updateDisplay(result)
+
             break;
 
           case "+":
-            result = Number(this.state.operand1) + Number(this.state.operand2);
-            this.updateDisplay(result);
+            result = Number(this.state.operand1) + Number(this.state.operand2); // this.updateDisplay(result)
+
             break;
 
           case "-":
-            result = Number(this.state.operand1) - Number(this.state.operand2);
-            this.updateDisplay(result);
+            result = Number(this.state.operand1) - Number(this.state.operand2); // this.updateDisplay(result)
+
             break;
         }
       }
 
+      this.setState({
+        display: result,
+        operand1: result,
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      });
       console.log(this.state);
+    }
+  }, {
+    key: "handleMinus",
+    value: function handleMinus(val) {
+      if (this.state.operand1 == "" && this.state.operator1 == "" && this.state.operand2 == "") {
+        //minus is clicked when calc is in initial state as first operand
+        this.setOperands(val);
+      } else if (this.state.operand1 != "" && this.state.operator1 == "" && this.state.operand2 == "") {
+        //clicked after setting operand1, as operator, as the first operator clicked
+        this.setOperators(val);
+      } else if (this.state.operand1 != "" && (this.state.operator1 == "x" || this.state.operator1 == "/" || this.state.operator1 == "+" || this.state.operator1 == "-") && this.state.operand2 == "") {
+        this.setOperands(val); //clicked after operator has been clicked previously, set as start of second operand
+      } else if (this.state.operand1 != "" && this.state.operator1 != "" && this.state.operand2 != "") {
+        //clicked after second operand has been set, as operator for the result
+        this.setOperators(val);
+      } // else{
+      //   this.setOperators(val)//other cases
+      // }
+
     }
   }, {
     key: "render",
@@ -454,6 +543,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
         setOperands: this.setOperands,
         setOperators: this.setOperators,
         handleEquals: this.handleEquals,
+        handleMinus: this.handleMinus,
         power: this.state.power,
         display: this.state.display
       }));
@@ -521,3 +611,4 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 ;
 ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //implement decimal
 //strip leading 0s from operands before evaluation
+//why is it not displaying correctly the display value of -
