@@ -33,8 +33,11 @@ $(document).ready(()=>{
   
 })
 
+//Redux
 
-//React up and running
+
+
+//React
 
 const key_array = [
   {
@@ -490,26 +493,24 @@ class App extends React.Component{
 //react-redux
 
 const mapStateToProps = (state)=>({
-  value: state //value is a prop of app in react now, while state is a string state from redux
+  
 });
 
 const mapDispatchToProps = (dispatch)=>({
-  update: (newtext)=>{
-    dispatch(update(newtext)); //update is a prop of app in react, dispatch is from redux, newtext is the 
-  }
+ 
 });
 
 const Provider = ReactRedux.Provider;//connects react to store
 const connect = ReactRedux.connect; //connects state and dispatch of store to react app props
 
-const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(App) //app now has props that include value-connecting redux state, and update-connecting redux action creator, update, which are all just js.
+const Container = connect(mapStateToProps, mapDispatchToProps)(App) //app now has props that include value-connecting redux state, and update-connecting redux action creator, update, which are all just js.
 
 class AppWrapper extends React.Component {
   
   render() {
       return (
         <Provider store={store}>
-          <ConnectedComponent/>
+          <Container/>
         </Provider>
       );
     }
@@ -518,6 +519,5 @@ class AppWrapper extends React.Component {
 
 ReactDOM.render(<App/>, document.querySelector('#root'));
 
-//implement decimal
-//strip leading 0s from operands before evaluation
-//why is it not displaying correctly the display value of -
+//move state to redux
+//style
