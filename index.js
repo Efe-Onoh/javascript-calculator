@@ -35,7 +35,101 @@ $(document).ready(()=>{
 
 //Redux
 
+//default state
+const defaultState = {
+  power: false,
+  display: "",
+  operand1: "",
+  operand2: "",
+  prevOprt1: "",
+  operator1: "",
+  operand1set: false,
+  operator1set: false,
+  operand2set: false
+}
 
+//action constants
+const POWER = 'POWER'
+const RESET = 'RESET'
+const UPDATE_DISPLAY = 'UPDATE_DISPLAY'
+const EQUALS = 'HANDLE_EQUALS'
+//action creators
+const togglePower = ()=>({
+  type: POWER
+})
+
+const updateDisplay = (message)=>({
+  type: UPDATE_DISPLAY,
+  message
+})
+
+const resetCalculator = ()=>({
+  type: RESET
+})
+
+const handleEquals = (result)=>({
+  type: EQUALS,
+  result
+})
+//reducer
+
+const reducer = (state = defaultState, action)=>{
+  switch(action.type){
+    case POWER:
+      return ({
+        power: !state.power,
+        display: state.power? "" : "0",
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      })
+
+    case UPDATE_DISPLAY:
+      return ({
+        power: true,
+        display: action.message,
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      })
+    
+    case RESET:
+      return({
+        power: true,
+        display: "0",
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      })
+
+    case EQUALS:
+      return({
+        power: true,
+        display: action.result,
+        operand1: action.result,
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      })
+    default:
+      return state
+  }
+}
 
 //React
 
@@ -520,4 +614,5 @@ class AppWrapper extends React.Component {
 ReactDOM.render(<App/>, document.querySelector('#root'));
 
 //move state to redux
+//actioncreators are passed params through dispatching.
 //style
