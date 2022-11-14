@@ -616,11 +616,28 @@ class App extends React.Component{
 //react-redux
 
 const mapStateToProps = (state)=>({
-  
+  state //a prop called state mapped to state.
 });
 
 const mapDispatchToProps = (dispatch)=>({
- 
+  doTogglePower: ()=>{
+    dispatch(togglePower())
+  },
+  doUpdateDisplay: (message)=>{
+    dispatch(updateDisplay(message))
+  },
+  doResetCalculator: ()=>{
+    dispatch(resetCalculator())
+  },
+  doHandleEquals: (result)=>{
+    dispatch(handleEquals(result))
+  },
+  doSetOperands: (stateObj)=>{
+    dispatch(setOperands(stateObj))
+  },
+  doSetOperators: (stateObj)=>{
+    dispatch(setOperators(stateObj))
+  }
 });
 
 const Provider = ReactRedux.Provider;//connects react to store
