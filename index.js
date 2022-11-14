@@ -53,6 +53,9 @@ const POWER = 'POWER'
 const RESET = 'RESET'
 const UPDATE_DISPLAY = 'UPDATE_DISPLAY'
 const EQUALS = 'HANDLE_EQUALS'
+const SET_OPERANDS = 'SET_OPERANDS'
+const SET_OPERATORS = 'SET_OPERATORS'
+
 //action creators
 const togglePower = ()=>({
   type: POWER
@@ -71,6 +74,16 @@ const handleEquals = (result)=>({
   type: EQUALS,
   result
 })
+
+const setOperands = (stateObj)=>({
+  type: SET_OPERANDS,
+  stateObj
+})
+
+const setOperators = (stateObj)=>({
+  type: SET_OPERATORS,
+  stateObj
+})
 //reducer
 
 const reducer = (state = defaultState, action)=>{
@@ -79,6 +92,19 @@ const reducer = (state = defaultState, action)=>{
       return ({
         power: !state.power,
         display: state.power? "" : "0",
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      })
+
+    case RESET:
+      return({
+        power: true,
+        display: "0",
         operand1: "",
         operand2: "",
         prevOprt1: "",
@@ -100,19 +126,6 @@ const reducer = (state = defaultState, action)=>{
         operator1set: false,
         operand2set: false
       })
-    
-    case RESET:
-      return({
-        power: true,
-        display: "0",
-        operand1: "",
-        operand2: "",
-        prevOprt1: "",
-        operator1: "",
-        operand1set: false,
-        operator1set: false,
-        operand2set: false
-      })
 
     case EQUALS:
       return({
@@ -126,10 +139,27 @@ const reducer = (state = defaultState, action)=>{
         operator1set: false,
         operand2set: false
       })
+    
+    case SET_OPERANDS:
+      return action.stateObj
+
+    case SET_OPERATORS:
+      return action.stateObj
+    
     default:
       return state
   }
 }
+
+//Create Store
+const store = Redux.createStore(reducer);
+
+//store listener
+const sl = ()=>{
+  console.log("Update occured...")
+  console.log("New State: ", store.getState())
+}
+store.subscribe(sl)
 
 //React
 
@@ -243,7 +273,6 @@ class DisplayComponent extends React.Component{
   constructor(props){
     super(props)
 
-  
   }
  //render 
   render(){
@@ -615,4 +644,5 @@ ReactDOM.render(<App/>, document.querySelector('#root'));
 
 //move state to redux
 //actioncreators are passed params through dispatching.
+//each fxn could call dispatch to dispatch their respective actions
 //style
