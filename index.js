@@ -38,7 +38,7 @@ $(document).ready(()=>{
 //default state
 const defaultState = {
   power: false,
-  display: "",
+  display: "hey",
   operand1: "",
   operand2: "",
   prevOprt1: "",
@@ -153,7 +153,7 @@ const reducer = (state = defaultState, action)=>{
 
 //Create Store
 const store = Redux.createStore(reducer);
-
+console.log("initial state: ",store.getState())
 //store listener
 const sl = ()=>{
   console.log("Update occured...")
@@ -365,7 +365,7 @@ class Calculator extends React.Component{
     
     return(
       <div>
-        <CalculatorButtons item={key_array} handleClick={this.onButtonClickHandler} />
+        <CalculatorButtons item={key_array} handleClick={this.onButtonClickHandler}/>
       </div>
     )
   }
@@ -398,32 +398,17 @@ class App extends React.Component{
 
   //turns calculator on, sets display to 0: or off, sets display to ""
   togglePower(){
-    this.setState(state =>({
-      power: !state.power,
-      display: state.power? "" : "0"
-    }))
+    this.props.doTogglePower()
   }
 
   //updates the display according to click
   updateDisplay(val){
-    this.setState({
-      display: val
-    })
+    this.props.doUpdateDisplay(val)
   }
 
   //Handle AC click
   resetCalculator(){
-    this.setState({
-      power: true,
-      display: "0",
-      operand1: "",
-      operand2: "",
-      prevOprt1: "",
-      operator1: "",
-      operand1set: false,
-      operator1set: false,
-      operand2set: false
-    })
+    this.props.doResetCalculator()
   }
   
   setOperands(val){
@@ -537,41 +522,42 @@ class App extends React.Component{
   }
 
   handleEquals(){
-    console.log(this.state)
+    console.log(this.props.state)
     var result 
-    if(this.state.operand1=="" || this.state.operand2=="" || this.state.operator1 == ""){
-      //this.updateDisplay(this.state.display)//if any is in initial state, display what was last displayed
+    if(this.props.state.operand1=="" || this.props.state.operand2=="" || this.props.state.operator1 == ""){
+      //this.updateDisplay(this.props.state.display)//if any is in initial state, display what was last displayed
     }
     else{
-      switch(this.state.operator1){
+      switch(this.props.state.operator1){
         case "x":
-          result = parseFloat(this.state.operand1)*parseFloat(this.state.operand2)
+          result = parseFloat(this.props.state.operand1)*parseFloat(this.props.state.operand2)
           // this.updateDisplay(result)
           break
         case "/":
-          result = parseFloat(this.state.operand1)/parseFloat(this.state.operand2)
+          result = parseFloat(this.props.state.operand1)/parseFloat(this.props.state.operand2)
           // this.updateDisplay(result)
           break
         case "+":
-          result = Number(this.state.operand1)+Number(this.state.operand2)
+          result = Number(this.props.state.operand1)+Number(this.props.state.operand2)
           // this.updateDisplay(result)
           break
         case "-":
-          result = Number(this.state.operand1)-Number(this.state.operand2)
+          result = Number(this.props.state.operand1)-Number(this.props.state.operand2)
           // this.updateDisplay(result)
           break
       }
     }
-    this.setState({
-      display: result,
-      operand1: result,
-      operand2: "",
-      prevOprt1: "",
-      operator1: "",
-      operand1set: false,
-      operator1set: false,
-      operand2set: false
-    })
+    // this.setState({
+    //   display: result,
+    //   operand1: result,
+    //   operand2: "",
+    //   prevOprt1: "",
+    //   operator1: "",
+    //   operand1set: false,
+    //   operator1set: false,
+    //   operand2set: false
+    // })
+    this.props.doHandleEquals(result)
     console.log(this.state)
   }
 
@@ -597,8 +583,8 @@ class App extends React.Component{
     return(
       <div id="calculator-machine" >
         <h5>MP1513-EO</h5>
-        <PowerIndicatorComponent power={this.state.power} togglePower={this.togglePower}/>
-        <DisplayComponent display={this.state.display}/>
+        <PowerIndicatorComponent power={this.props.state.power} togglePower={this.togglePower}/>
+        <DisplayComponent display={this.props.state.display}/>
         <Calculator togglePower={this.togglePower} 
         updateDisplay={this.updateDisplay} 
         resetCalculator={this.resetCalculator} 
@@ -606,8 +592,9 @@ class App extends React.Component{
         setOperators={this.setOperators}
         handleEquals={this.handleEquals}
         handleMinus={this.handleMinus} 
-        power={this.state.power} 
-        display={this.state.display}/>
+        power={this.props.state.power} 
+        display={this.props.state.display}
+        />
       </div>
     ) 
   }
@@ -620,6 +607,7 @@ const mapStateToProps = (state)=>({
 });
 
 const mapDispatchToProps = (dispatch)=>({
+  //all action creators mapped to props
   doTogglePower: ()=>{
     dispatch(togglePower())
   },
@@ -643,10 +631,12 @@ const mapDispatchToProps = (dispatch)=>({
 const Provider = ReactRedux.Provider;//connects react to store
 const connect = ReactRedux.connect; //connects state and dispatch of store to react app props
 
-const Container = connect(mapStateToProps, mapDispatchToProps)(App) //app now has props that include value-connecting redux state, and update-connecting redux action creator, update, which are all just js.
+const Container = connect(mapStateToProps, mapDispatchToProps)(App) //app now has props which include external redux store state, and functions that dispatch actions to the store
 
 class AppWrapper extends React.Component {
-  
+  constructor(props){
+    super(props)
+  }
   render() {
       return (
         <Provider store={store}>
@@ -657,9 +647,12 @@ class AppWrapper extends React.Component {
 
 };
 
-ReactDOM.render(<App/>, document.querySelector('#root'));
+ReactDOM.render(<AppWrapper/>, document.querySelector('#root'));
 
 //move state to redux
 //actioncreators are passed params through dispatching.
 //each fxn could call dispatch to dispatch their respective actions
+//connect redux to react next
+//look at handleequals better, make sure its ok, impl both setops
+//for setops, each time they make a state update, they pass that state to dispatch.
 //style

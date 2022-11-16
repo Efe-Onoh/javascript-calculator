@@ -47,7 +47,147 @@ INSTRUCTIONS:
 // PLEASE NOTE: Adding global style rules using the * selector, or by adding rules to body {..} or html {..}, or to all elements within body or html, i.e. h1 {..}, has the potential to pollute the test suite's CSS. Try adding: * { color: red }, for a quick example!
 // Once you have read the above messages, you can delete all comments. 
 //Jquery up and running
-$(document).ready(function () {}); //React up and running
+$(document).ready(function () {}); //Redux
+//default state
+
+var defaultState = {
+  power: false,
+  display: "hey",
+  operand1: "",
+  operand2: "",
+  prevOprt1: "",
+  operator1: "",
+  operand1set: false,
+  operator1set: false,
+  operand2set: false
+}; //action constants
+
+var POWER = 'POWER';
+var RESET = 'RESET';
+var UPDATE_DISPLAY = 'UPDATE_DISPLAY';
+var EQUALS = 'HANDLE_EQUALS';
+var SET_OPERANDS = 'SET_OPERANDS';
+var SET_OPERATORS = 'SET_OPERATORS'; //action creators
+
+var togglePower = function togglePower() {
+  return {
+    type: POWER
+  };
+};
+
+var updateDisplay = function updateDisplay(message) {
+  return {
+    type: UPDATE_DISPLAY,
+    message: message
+  };
+};
+
+var resetCalculator = function resetCalculator() {
+  return {
+    type: RESET
+  };
+};
+
+var handleEquals = function handleEquals(result) {
+  return {
+    type: EQUALS,
+    result: result
+  };
+};
+
+var setOperands = function setOperands(stateObj) {
+  return {
+    type: SET_OPERANDS,
+    stateObj: stateObj
+  };
+};
+
+var setOperators = function setOperators(stateObj) {
+  return {
+    type: SET_OPERATORS,
+    stateObj: stateObj
+  };
+}; //reducer
+
+
+var reducer = function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
+  var action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case POWER:
+      return {
+        power: !state.power,
+        display: state.power ? "" : "0",
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      };
+
+    case RESET:
+      return {
+        power: true,
+        display: "0",
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      };
+
+    case UPDATE_DISPLAY:
+      return {
+        power: true,
+        display: action.message,
+        operand1: "",
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      };
+
+    case EQUALS:
+      return {
+        power: true,
+        display: action.result,
+        operand1: action.result,
+        operand2: "",
+        prevOprt1: "",
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false
+      };
+
+    case SET_OPERANDS:
+      return action.stateObj;
+
+    case SET_OPERATORS:
+      return action.stateObj;
+
+    default:
+      return state;
+  }
+}; //Create Store
+
+
+var store = Redux.createStore(reducer);
+console.log("initial state: ", store.getState()); //store listener
+
+var sl = function sl() {
+  console.log("Update occured...");
+  console.log("New State: ", store.getState());
+};
+
+store.subscribe(sl); //React
 
 var key_array = [{
   id: "zero",
@@ -304,36 +444,19 @@ var App = /*#__PURE__*/function (_React$Component3) {
   _createClass(App, [{
     key: "togglePower",
     value: function togglePower() {
-      this.setState(function (state) {
-        return {
-          power: !state.power,
-          display: state.power ? "" : "0"
-        };
-      });
+      this.props.doTogglePower();
     } //updates the display according to click
 
   }, {
     key: "updateDisplay",
     value: function updateDisplay(val) {
-      this.setState({
-        display: val
-      });
+      this.props.doUpdateDisplay(val);
     } //Handle AC click
 
   }, {
     key: "resetCalculator",
     value: function resetCalculator() {
-      this.setState({
-        power: true,
-        display: "0",
-        operand1: "",
-        operand2: "",
-        prevOprt1: "",
-        operator1: "",
-        operand1set: false,
-        operator1set: false,
-        operand2set: false
-      });
+      this.props.doResetCalculator();
     }
   }, {
     key: "setOperands",
@@ -467,44 +590,45 @@ var App = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "handleEquals",
     value: function handleEquals() {
-      console.log(this.state);
+      console.log(this.props.state);
       var result;
 
-      if (this.state.operand1 == "" || this.state.operand2 == "" || this.state.operator1 == "") {//this.updateDisplay(this.state.display)//if any is in initial state, display what was last displayed
+      if (this.props.state.operand1 == "" || this.props.state.operand2 == "" || this.props.state.operator1 == "") {//this.updateDisplay(this.props.state.display)//if any is in initial state, display what was last displayed
       } else {
-        switch (this.state.operator1) {
+        switch (this.props.state.operator1) {
           case "x":
-            result = parseFloat(this.state.operand1) * parseFloat(this.state.operand2); // this.updateDisplay(result)
+            result = parseFloat(this.props.state.operand1) * parseFloat(this.props.state.operand2); // this.updateDisplay(result)
 
             break;
 
           case "/":
-            result = parseFloat(this.state.operand1) / parseFloat(this.state.operand2); // this.updateDisplay(result)
+            result = parseFloat(this.props.state.operand1) / parseFloat(this.props.state.operand2); // this.updateDisplay(result)
 
             break;
 
           case "+":
-            result = Number(this.state.operand1) + Number(this.state.operand2); // this.updateDisplay(result)
+            result = Number(this.props.state.operand1) + Number(this.props.state.operand2); // this.updateDisplay(result)
 
             break;
 
           case "-":
-            result = Number(this.state.operand1) - Number(this.state.operand2); // this.updateDisplay(result)
+            result = Number(this.props.state.operand1) - Number(this.props.state.operand2); // this.updateDisplay(result)
 
             break;
         }
-      }
+      } // this.setState({
+      //   display: result,
+      //   operand1: result,
+      //   operand2: "",
+      //   prevOprt1: "",
+      //   operator1: "",
+      //   operand1set: false,
+      //   operator1set: false,
+      //   operand2set: false
+      // })
 
-      this.setState({
-        display: result,
-        operand1: result,
-        operand2: "",
-        prevOprt1: "",
-        operator1: "",
-        operand1set: false,
-        operator1set: false,
-        operand2set: false
-      });
+
+      this.props.doHandleEquals(result);
       console.log(this.state);
     }
   }, {
@@ -532,10 +656,10 @@ var App = /*#__PURE__*/function (_React$Component3) {
       return /*#__PURE__*/React.createElement("div", {
         id: "calculator-machine"
       }, /*#__PURE__*/React.createElement("h5", null, "MP1513-EO"), /*#__PURE__*/React.createElement(PowerIndicatorComponent, {
-        power: this.state.power,
+        power: this.props.state.power,
         togglePower: this.togglePower
       }), /*#__PURE__*/React.createElement(DisplayComponent, {
-        display: this.state.display
+        display: this.props.state.display
       }), /*#__PURE__*/React.createElement(Calculator, {
         togglePower: this.togglePower,
         updateDisplay: this.updateDisplay,
@@ -544,8 +668,8 @@ var App = /*#__PURE__*/function (_React$Component3) {
         setOperators: this.setOperators,
         handleEquals: this.handleEquals,
         handleMinus: this.handleMinus,
-        power: this.state.power,
-        display: this.state.display
+        power: this.props.state.power,
+        display: this.props.state.display
       }));
     }
   }]);
@@ -556,26 +680,32 @@ var App = /*#__PURE__*/function (_React$Component3) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    value: state //value is a prop of app in react now, while state is a string state from redux
+    state: state //a prop called state mapped to state.
 
   };
 };
 
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    update: function (_update) {
-      function update(_x) {
-        return _update.apply(this, arguments);
-      }
-
-      update.toString = function () {
-        return _update.toString();
-      };
-
-      return update;
-    }(function (newtext) {
-      dispatch(update(newtext)); //update is a prop of app in react, dispatch is from redux, newtext is the 
-    })
+    //all action creators mapped to props
+    doTogglePower: function doTogglePower() {
+      dispatch(togglePower());
+    },
+    doUpdateDisplay: function doUpdateDisplay(message) {
+      dispatch(updateDisplay(message));
+    },
+    doResetCalculator: function doResetCalculator() {
+      dispatch(resetCalculator());
+    },
+    doHandleEquals: function doHandleEquals(result) {
+      dispatch(handleEquals(result));
+    },
+    doSetOperands: function doSetOperands(stateObj) {
+      dispatch(setOperands(stateObj));
+    },
+    doSetOperators: function doSetOperators(stateObj) {
+      dispatch(setOperators(stateObj));
+    }
   };
 };
 
@@ -583,17 +713,17 @@ var Provider = ReactRedux.Provider; //connects react to store
 
 var connect = ReactRedux.connect; //connects state and dispatch of store to react app props
 
-var ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(App); //app now has props that include value-connecting redux state, and update-connecting redux action creator, update, which are all just js.
+var Container = connect(mapStateToProps, mapDispatchToProps)(App); //app now has props which include external redux store state, and functions that dispatch actions to the store
 
 var AppWrapper = /*#__PURE__*/function (_React$Component4) {
   _inherits(AppWrapper, _React$Component4);
 
   var _super4 = _createSuper(AppWrapper);
 
-  function AppWrapper() {
+  function AppWrapper(props) {
     _classCallCheck(this, AppWrapper);
 
-    return _super4.apply(this, arguments);
+    return _super4.call(this, props);
   }
 
   _createClass(AppWrapper, [{
@@ -601,7 +731,7 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
     value: function render() {
       return /*#__PURE__*/React.createElement(Provider, {
         store: store
-      }, /*#__PURE__*/React.createElement(ConnectedComponent, null));
+      }, /*#__PURE__*/React.createElement(Container, null));
     }
   }]);
 
@@ -609,6 +739,8 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 }(React.Component);
 
 ;
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('#root')); //implement decimal
-//strip leading 0s from operands before evaluation
-//why is it not displaying correctly the display value of -
+ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.querySelector('#root')); //move state to redux
+//actioncreators are passed params through dispatching.
+//each fxn could call dispatch to dispatch their respective actions
+//connect redux to react next
+//style
