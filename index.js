@@ -38,7 +38,7 @@ $(document).ready(()=>{
 //default state
 const defaultState = {
   power: false,
-  display: "hey",
+  display: "",
   operand1: "",
   operand2: "",
   prevOprt1: "",
@@ -412,113 +412,118 @@ class App extends React.Component{
   }
   
   setOperands(val){
-    this.setState(state=>{
-      if(!state.operand1set){
-        //remove additional leading 0s and additional decimal points
-        let op1 = state.operand1+val
-        let decimalIndex = op1.search(/\./)
-        op1 = op1.substring(0,decimalIndex+1)+op1.substring(decimalIndex+1).replace(/\.+/,'')
-        op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.')
-        
-        return({
-          display: op1+state.operator1+state.operand2,//get the current value for display
-          operand1: op1,
-          operand2: "",
-          prevOprt1: state.operator1,
-          operator1: "",
-          operand1set: false,
-          operator1set: false,
-          operand2set: false //operand1 gets finished and set true when operator is pressed
-        })
+    let state = this.props.state
+    if(!state.operand1set){
+      //remove additional leading 0s and additional decimal points
+      let op1 = state.operand1+val
+      let decimalIndex = op1.search(/\./)
+      op1 = op1.substring(0,decimalIndex+1)+op1.substring(decimalIndex+1).replace(/\.+/,'')
+      op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.')
+      
+      let stateObj = {
+        display: op1+state.operator1+state.operand2,//get the current value for display
+        operand1: op1,
+        operand2: "",
+        prevOprt1: state.operator1,
+        operator1: "",
+        operand1set: false,
+        operator1set: false,
+        operand2set: false //operand1 gets finished and set true when operator is pressed
       }
-      else{
-        //remove additional leading 0s and additional decimal points
-        let op2 = state.operand2+val
-        let decimalIndex = op2.search(/\./)
-        op2 = op2.substring(0,decimalIndex+1)+op2.substring(decimalIndex+1).replace(/\.+/,'')
-        op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.')
-        
-        return({
-          display: state.operand1+state.operator1+op2,
-          operand2: op2,
-          operand1set: true,
-          operator1set: true,//operator1 gets finished and set true when operand2 is pressed
-          operand2set: false
-        })
+
+      this.props.doSetOperands(stateObj)
+    }
+    else{
+      //remove additional leading 0s and additional decimal points
+      let op2 = state.operand2+val
+      let decimalIndex = op2.search(/\./)
+      op2 = op2.substring(0,decimalIndex+1)+op2.substring(decimalIndex+1).replace(/\.+/,'')
+      op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.')
+      
+      let stateObj = {
+        display: state.operand1+state.operator1+op2,
+        operand2: op2,
+        operand1set: true,
+        operator1set: true,//operator1 gets finished and set true when operand2 is pressed
+        operand2set: false
       }
-    })
+      this.props.doSetOperands(stateObj)
+    }
   }
 
   setOperators(val){
-    this.setState(state=>{
-      if(!state.operator1set){//if operator1 is not finalized, set operator 1
-        if(state.operand1 == "-" || state.operand1 == ""){//someone pushed an operator first or immediately after pushing - , don't set operator in this case
-          return({
-            display: state.operand1+""+state.operand2,
-            operand2: "",
-            prevOprt1: state.operator1,
-            operator1: "",
-            operand1set: false,//operand 1 is not finalized
-            operator1set: false,
-            operand2set: false //operand1 gets finished and set true when operator is pressed
-          })
+    let state = this.props.state
+    if(!state.operator1set){//if operator1 is not finalized, set operator 1
+      if(state.operand1 == "-" || state.operand1 == ""){//someone pushed an operator first or immediately after pushing - , don't set operator in this case
+        let stateObj = {
+          display: state.operand1+""+state.operand2,
+          operand2: "",
+          prevOprt1: state.operator1,
+          operator1: "",
+          operand1set: false,//operand 1 is not finalized
+          operator1set: false,
+          operand2set: false //operand1 gets finished and set true when operator is pressed
         }
-        else {//operand1 is valid, set operator
-          return({
-            display: state.operand1+val+state.operand2,
-            operand2: "",
-            prevOprt1: state.operator1,
-            operator1: val,
-            operand1set: true, //finalize operand1
-            operator1set: false,
-            operand2set: false //operand1 gets finished and set true when operator is pressed
-          })
-        }
+        this.props.doSetOperators(stateObj)
       }
-      else{//if operator1 is set, set operator2
-        if(state.operand2 == "-"){//someone clicked an operator immediately after clicking - for operand2 - 
-          return({
-            display: state.operand1+val+"",
-            operand2: "",
-            prevOprt1: "-",//take the - used as last operator
-            operator1: val,//operator 1 becomes the operator pressed.
-            operand1set: true,
-            operator1set: false,//operator1 still not finalized
-            operand2set: false //operand1 gets finished and set true when operator is pressed
-          })
+      else {//operand1 is valid, set operator
+        let stateObj = {
+          display: state.operand1+val+state.operand2,
+          operand2: "",
+          prevOprt1: state.operator1,
+          operator1: val,
+          operand1set: true, //finalize operand1
+          operator1set: false,
+          operand2set: false //operand1 gets finished and set true when operator is pressed
         }
-        else{//operand2 was valid, evaluate, and make operator operator1 for result.
-          var result
-          switch(state.operator1){
-            case "x":
-              result = parseFloat(state.operand1)*parseFloat(state.operand2)
-              break
-            case "/":
-              result = parseFloat(state.operand1)/parseFloat(state.operand2)
-              break
-            case "+":
-              result = Number(state.operand1)+Number(state.operand2)
-              break
-            case "-":
-              result = Number(state.operand1)-Number(state.operand2)
-              break
-          }  
-          
-          return({
-            display: result+val,
-            //operand1 should get result of evaluating prevop1+oprt1+op2
-            //operator1 should now get operatorpassed
-            operand1: result,
-            operand2: "",
-            prevOprt1: state.operator1,
-            operator1: val,
-            operand1set: true,
-            operator1set: false,
-            operand2set: false
-          })
-        }    
+        this.props.doSetOperators(stateObj)
       }
-    })
+    }
+    else{//if operator1 is set, set operator2
+      if(state.operand2 == "-"){//someone clicked an operator immediately after clicking - for operand2 - 
+        let stateObj = {
+          display: state.operand1+val+"",
+          operand2: "",
+          prevOprt1: "-",//take the - used as last operator
+          operator1: val,//operator 1 becomes the operator pressed.
+          operand1set: true,
+          operator1set: false,//operator1 still not finalized
+          operand2set: false //operand1 gets finished and set true when operator is pressed
+        }
+        this.props.doSetOperators(stateObj)
+      }
+      else{//operand2 was valid, evaluate, and make operator operator1 for result.
+        var result
+        switch(state.operator1){
+          case "x":
+            result = parseFloat(state.operand1)*parseFloat(state.operand2)
+            break
+          case "/":
+            result = parseFloat(state.operand1)/parseFloat(state.operand2)
+            break
+          case "+":
+            result = Number(state.operand1)+Number(state.operand2)
+            break
+          case "-":
+            result = Number(state.operand1)-Number(state.operand2)
+            break
+        }  
+        
+        let stateObj = {
+          display: result+val,
+          //operand1 should get result of evaluating prevop1+oprt1+op2
+          //operator1 should now get operatorpassed
+          operand1: result,
+          operand2: "",
+          prevOprt1: state.operator1,
+          operator1: val,
+          operand1set: true,
+          operator1set: false,
+          operand2set: false
+        }
+        this.props.doSetOperators(stateObj)
+      }    
+    }
   }
 
   handleEquals(){
@@ -655,4 +660,5 @@ ReactDOM.render(<AppWrapper/>, document.querySelector('#root'));
 //connect redux to react next
 //look at handleequals better, make sure its ok, impl both setops
 //for setops, each time they make a state update, they pass that state to dispatch.
-//style
+//buttons aren't working to respond to state changes or state isn't changing
+//current state may not be getting received, try store.getState() to retrieve latest state.

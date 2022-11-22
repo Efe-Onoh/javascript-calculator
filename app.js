@@ -52,7 +52,7 @@ $(document).ready(function () {}); //Redux
 
 var defaultState = {
   power: false,
-  display: "hey",
+  display: "",
   operand1: "",
   operand2: "",
   prevOprt1: "",
@@ -461,131 +461,137 @@ var App = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "setOperands",
     value: function setOperands(val) {
-      this.setState(function (state) {
-        if (!state.operand1set) {
-          //remove additional leading 0s and additional decimal points
-          var op1 = state.operand1 + val;
-          var decimalIndex = op1.search(/\./);
-          op1 = op1.substring(0, decimalIndex + 1) + op1.substring(decimalIndex + 1).replace(/\.+/, '');
-          op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.');
-          return {
-            display: op1 + state.operator1 + state.operand2,
-            //get the current value for display
-            operand1: op1,
-            operand2: "",
-            prevOprt1: state.operator1,
-            operator1: "",
-            operand1set: false,
-            operator1set: false,
-            operand2set: false //operand1 gets finished and set true when operator is pressed
+      var state = this.props.state;
 
-          };
-        } else {
-          //remove additional leading 0s and additional decimal points
-          var op2 = state.operand2 + val;
+      if (!state.operand1set) {
+        //remove additional leading 0s and additional decimal points
+        var op1 = state.operand1 + val;
+        var decimalIndex = op1.search(/\./);
+        op1 = op1.substring(0, decimalIndex + 1) + op1.substring(decimalIndex + 1).replace(/\.+/, '');
+        op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.');
+        var stateObj = {
+          display: op1 + state.operator1 + state.operand2,
+          //get the current value for display
+          operand1: op1,
+          operand2: "",
+          prevOprt1: state.operator1,
+          operator1: "",
+          operand1set: false,
+          operator1set: false,
+          operand2set: false //operand1 gets finished and set true when operator is pressed
 
-          var _decimalIndex = op2.search(/\./);
+        };
+        this.props.doSetOperands(stateObj);
+      } else {
+        //remove additional leading 0s and additional decimal points
+        var op2 = state.operand2 + val;
 
-          op2 = op2.substring(0, _decimalIndex + 1) + op2.substring(_decimalIndex + 1).replace(/\.+/, '');
-          op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.');
-          return {
-            display: state.operand1 + state.operator1 + op2,
-            operand2: op2,
-            operand1set: true,
-            operator1set: true,
-            //operator1 gets finished and set true when operand2 is pressed
-            operand2set: false
-          };
-        }
-      });
+        var _decimalIndex = op2.search(/\./);
+
+        op2 = op2.substring(0, _decimalIndex + 1) + op2.substring(_decimalIndex + 1).replace(/\.+/, '');
+        op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.');
+        var _stateObj = {
+          display: state.operand1 + state.operator1 + op2,
+          operand2: op2,
+          operand1set: true,
+          operator1set: true,
+          //operator1 gets finished and set true when operand2 is pressed
+          operand2set: false
+        };
+        this.props.doSetOperands(_stateObj);
+      }
     }
   }, {
     key: "setOperators",
     value: function setOperators(val) {
-      this.setState(function (state) {
-        if (!state.operator1set) {
-          //if operator1 is not finalized, set operator 1
-          if (state.operand1 == "-" || state.operand1 == "") {
-            //someone pushed an operator first or immediately after pushing - , don't set operator in this case
-            return {
-              display: state.operand1 + "" + state.operand2,
-              operand2: "",
-              prevOprt1: state.operator1,
-              operator1: "",
-              operand1set: false,
-              //operand 1 is not finalized
-              operator1set: false,
-              operand2set: false //operand1 gets finished and set true when operator is pressed
+      var state = this.props.state;
 
-            };
-          } else {
-            //operand1 is valid, set operator
-            return {
-              display: state.operand1 + val + state.operand2,
-              operand2: "",
-              prevOprt1: state.operator1,
-              operator1: val,
-              operand1set: true,
-              //finalize operand1
-              operator1set: false,
-              operand2set: false //operand1 gets finished and set true when operator is pressed
+      if (!state.operator1set) {
+        //if operator1 is not finalized, set operator 1
+        if (state.operand1 == "-" || state.operand1 == "") {
+          //someone pushed an operator first or immediately after pushing - , don't set operator in this case
+          var stateObj = {
+            display: state.operand1 + "" + state.operand2,
+            operand2: "",
+            prevOprt1: state.operator1,
+            operator1: "",
+            operand1set: false,
+            //operand 1 is not finalized
+            operator1set: false,
+            operand2set: false //operand1 gets finished and set true when operator is pressed
 
-            };
-          }
+          };
+          this.props.doSetOperators(stateObj);
         } else {
-          //if operator1 is set, set operator2
-          if (state.operand2 == "-") {
-            //someone clicked an operator immediately after clicking - for operand2 - 
-            return {
-              display: state.operand1 + val + "",
-              operand2: "",
-              prevOprt1: "-",
-              //take the - used as last operator
-              operator1: val,
-              //operator 1 becomes the operator pressed.
-              operand1set: true,
-              operator1set: false,
-              //operator1 still not finalized
-              operand2set: false //operand1 gets finished and set true when operator is pressed
+          //operand1 is valid, set operator
+          var _stateObj2 = {
+            display: state.operand1 + val + state.operand2,
+            operand2: "",
+            prevOprt1: state.operator1,
+            operator1: val,
+            operand1set: true,
+            //finalize operand1
+            operator1set: false,
+            operand2set: false //operand1 gets finished and set true when operator is pressed
 
-            };
-          } else {
-            //operand2 was valid, evaluate, and make operator operator1 for result.
-            var result;
-
-            switch (state.operator1) {
-              case "x":
-                result = parseFloat(state.operand1) * parseFloat(state.operand2);
-                break;
-
-              case "/":
-                result = parseFloat(state.operand1) / parseFloat(state.operand2);
-                break;
-
-              case "+":
-                result = Number(state.operand1) + Number(state.operand2);
-                break;
-
-              case "-":
-                result = Number(state.operand1) - Number(state.operand2);
-                break;
-            }
-
-            return {
-              display: result + val,
-              //operand1 should get result of evaluating prevop1+oprt1+op2
-              //operator1 should now get operatorpassed
-              operand1: result,
-              operand2: "",
-              prevOprt1: state.operator1,
-              operator1: val,
-              operand1set: true,
-              operator1set: false,
-              operand2set: false
-            };
-          }
+          };
+          this.props.doSetOperators(_stateObj2);
         }
-      });
+      } else {
+        //if operator1 is set, set operator2
+        if (state.operand2 == "-") {
+          //someone clicked an operator immediately after clicking - for operand2 - 
+          var _stateObj3 = {
+            display: state.operand1 + val + "",
+            operand2: "",
+            prevOprt1: "-",
+            //take the - used as last operator
+            operator1: val,
+            //operator 1 becomes the operator pressed.
+            operand1set: true,
+            operator1set: false,
+            //operator1 still not finalized
+            operand2set: false //operand1 gets finished and set true when operator is pressed
+
+          };
+          this.props.doSetOperators(_stateObj3);
+        } else {
+          //operand2 was valid, evaluate, and make operator operator1 for result.
+          var result;
+
+          switch (state.operator1) {
+            case "x":
+              result = parseFloat(state.operand1) * parseFloat(state.operand2);
+              break;
+
+            case "/":
+              result = parseFloat(state.operand1) / parseFloat(state.operand2);
+              break;
+
+            case "+":
+              result = Number(state.operand1) + Number(state.operand2);
+              break;
+
+            case "-":
+              result = Number(state.operand1) - Number(state.operand2);
+              break;
+          }
+
+          var _stateObj4 = {
+            display: result + val,
+            //operand1 should get result of evaluating prevop1+oprt1+op2
+            //operator1 should now get operatorpassed
+            operand1: result,
+            operand2: "",
+            prevOprt1: state.operator1,
+            operator1: val,
+            operand1set: true,
+            operator1set: false,
+            operand2set: false
+          };
+          this.props.doSetOperators(_stateObj4);
+        }
+      }
     }
   }, {
     key: "handleEquals",
@@ -743,4 +749,7 @@ ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.qu
 //actioncreators are passed params through dispatching.
 //each fxn could call dispatch to dispatch their respective actions
 //connect redux to react next
-//style
+//look at handleequals better, make sure its ok, impl both setops
+//for setops, each time they make a state update, they pass that state to dispatch.
+//buttons aren't working to respond to state changes or state isn't changing
+//current state may not be getting received, try store.getState() to retrieve latest state.
