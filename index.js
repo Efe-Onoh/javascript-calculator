@@ -584,16 +584,18 @@ class App extends React.Component{
   }
 
   handleMinus(val){
-    if(this.state.operand1 == "" && this.state.operator1 == "" && this.state.operand2 == ""){ //minus is clicked when calc is in initial state as first operand
+    console.log("handle minus call...")
+    let state = this.props.state
+    if(state.operand1 == "" && state.operator1 == "" && state.operand2 == ""){ //minus is clicked when calc is in initial state as first operand
       this.setOperands(val)
     }
-    else if(this.state.operand1 != "" && this.state.operator1 == "" && this.state.operand2 == "" ){//clicked after setting operand1, as operator, as the first operator clicked
+    else if(state.operand1 != "" && state.operator1 == "" && state.operand2 == "" ){//clicked after setting operand1, as operator, as the first operator clicked
       this.setOperators(val)
     }
-    else if(this.state.operand1 != "" && (this.state.operator1 == "x" || this.state.operator1 == "/" || this.state.operator1 == "+" || this.state.operator1 == "-") && this.state.operand2 == "" ){
+    else if(state.operand1 != "" && (state.operator1 == "x" || state.operator1 == "/" || state.operator1 == "+" || state.operator1 == "-") && state.operand2 == "" ){
       this.setOperands(val)//clicked after operator has been clicked previously, set as start of second operand
     }
-    else if(this.state.operand1 != "" && this.state.operator1 != "" && this.state.operand2 != ""){//clicked after second operand has been set, as operator for the result
+    else if(state.operand1 != "" && state.operator1 != "" && state.operand2 != ""){//clicked after second operand has been set, as operator for the result
       this.setOperators(val)
     }
     // else{
@@ -671,11 +673,4 @@ class AppWrapper extends React.Component {
 
 ReactDOM.render(<AppWrapper/>, document.querySelector('#root'));
 
-//move state to redux
-
-//connect redux to react next
-//look at handleequals better, make sure its ok, impl both setops
-//for setops, each time they make a state update, they pass that state to dispatch.
-//fix- buttons aren't working to respond to state changes or state isn't changing: add all fields to state dispatch
-
-//send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
+//style

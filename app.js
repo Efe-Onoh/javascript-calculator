@@ -657,15 +657,18 @@ var App = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "handleMinus",
     value: function handleMinus(val) {
-      if (this.state.operand1 == "" && this.state.operator1 == "" && this.state.operand2 == "") {
+      console.log("handle minus call...");
+      var state = this.props.state;
+
+      if (state.operand1 == "" && state.operator1 == "" && state.operand2 == "") {
         //minus is clicked when calc is in initial state as first operand
         this.setOperands(val);
-      } else if (this.state.operand1 != "" && this.state.operator1 == "" && this.state.operand2 == "") {
+      } else if (state.operand1 != "" && state.operator1 == "" && state.operand2 == "") {
         //clicked after setting operand1, as operator, as the first operator clicked
         this.setOperators(val);
-      } else if (this.state.operand1 != "" && (this.state.operator1 == "x" || this.state.operator1 == "/" || this.state.operator1 == "+" || this.state.operator1 == "-") && this.state.operand2 == "") {
+      } else if (state.operand1 != "" && (state.operator1 == "x" || state.operator1 == "/" || state.operator1 == "+" || state.operator1 == "-") && state.operand2 == "") {
         this.setOperands(val); //clicked after operator has been clicked previously, set as start of second operand
-      } else if (this.state.operand1 != "" && this.state.operator1 != "" && this.state.operand2 != "") {
+      } else if (state.operand1 != "" && state.operator1 != "" && state.operand2 != "") {
         //clicked after second operand has been set, as operator for the result
         this.setOperators(val);
       } // else{
@@ -763,14 +766,8 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 
 ;
 ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.querySelector('#root')); //move state to redux
-//actioncreators are passed params through dispatching.
-//each fxn could call dispatch to dispatch their respective actions
 //connect redux to react next
 //look at handleequals better, make sure its ok, impl both setops
 //for setops, each time they make a state update, they pass that state to dispatch.
-//buttons aren't working to respond to state changes or state isn't changing
-//current state may not be getting received, try store.getState() to retrieve latest state.
+//fix- buttons aren't working to respond to state changes or state isn't changing: add all fields to state dispatch
 //send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
-//try changing state field name in mapstatetoprops
-//mapdispatchtoprops fields should return dispatch not just call it. could be
-//maybe rename dispatch fxns to action creator names
