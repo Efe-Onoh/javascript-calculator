@@ -474,6 +474,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
         op1 = op1.substring(0, decimalIndex + 1) + op1.substring(decimalIndex + 1).replace(/\.+/, '');
         op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.');
         var stateObj = {
+          power: true,
           display: op1 + state.operator1 + state.operand2,
           //get the current value for display
           operand1: op1,
@@ -495,8 +496,12 @@ var App = /*#__PURE__*/function (_React$Component3) {
         op2 = op2.substring(0, _decimalIndex + 1) + op2.substring(_decimalIndex + 1).replace(/\.+/, '');
         op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.');
         var _stateObj = {
+          power: true,
           display: state.operand1 + state.operator1 + op2,
+          operand1: state.operand1,
           operand2: op2,
+          prevOprt1: state.operator1,
+          operator1: state.operator1,
           operand1set: true,
           operator1set: true,
           //operator1 gets finished and set true when operand2 is pressed
@@ -516,7 +521,9 @@ var App = /*#__PURE__*/function (_React$Component3) {
         if (state.operand1 == "-" || state.operand1 == "") {
           //someone pushed an operator first or immediately after pushing - , don't set operator in this case
           var stateObj = {
+            power: true,
             display: state.operand1 + "" + state.operand2,
+            operand1: state.operand1,
             operand2: "",
             prevOprt1: state.operator1,
             operator1: "",
@@ -530,7 +537,9 @@ var App = /*#__PURE__*/function (_React$Component3) {
         } else {
           //operand1 is valid, set operator
           var _stateObj2 = {
+            power: true,
             display: state.operand1 + val + state.operand2,
+            operand1: state.operand1,
             operand2: "",
             prevOprt1: state.operator1,
             operator1: val,
@@ -547,7 +556,9 @@ var App = /*#__PURE__*/function (_React$Component3) {
         if (state.operand2 == "-") {
           //someone clicked an operator immediately after clicking - for operand2 - 
           var _stateObj3 = {
+            power: true,
             display: state.operand1 + val + "",
+            operand1: state.operand1,
             operand2: "",
             prevOprt1: "-",
             //take the - used as last operator
@@ -583,6 +594,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
           }
 
           var _stateObj4 = {
+            power: true,
             display: result + val,
             //operand1 should get result of evaluating prevop1+oprt1+op2
             //operator1 should now get operatorpassed

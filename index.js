@@ -672,15 +672,10 @@ class AppWrapper extends React.Component {
 ReactDOM.render(<AppWrapper/>, document.querySelector('#root'));
 
 //move state to redux
-//actioncreators are passed params through dispatching.
-//each fxn could call dispatch to dispatch their respective actions
+
 //connect redux to react next
 //look at handleequals better, make sure its ok, impl both setops
 //for setops, each time they make a state update, they pass that state to dispatch.
-//buttons aren't working to respond to state changes or state isn't changing
-//current state may not be getting received, try store.getState() to retrieve latest state.
+//fix- buttons aren't working to respond to state changes or state isn't changing: add all fields to state dispatch
 
 //send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
-//try changing state field name in mapstatetoprops
-//mapdispatchtoprops fields should return dispatch not just call it. could be
-//maybe rename dispatch fxns to action creator names
