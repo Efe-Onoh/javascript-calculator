@@ -398,20 +398,24 @@ class App extends React.Component{
 
   //turns calculator on, sets display to 0: or off, sets display to ""
   togglePower(){
+    console.log("toggle power call....")
     this.props.doTogglePower()
   }
 
   //updates the display according to click
   updateDisplay(val){
+    console.log("update display call....")
     this.props.doUpdateDisplay(val)
   }
 
   //Handle AC click
   resetCalculator(){
+    console.log("reset calculator call....")
     this.props.doResetCalculator()
   }
   
   setOperands(val){
+    console.log("set operands call....")
     let state = this.props.state
     if(!state.operand1set){
       //remove additional leading 0s and additional decimal points
@@ -421,6 +425,7 @@ class App extends React.Component{
       op1 = op1.replace(/^0+/, '0').replace(/\.+/, '.')
       
       let stateObj = {
+        power: true,
         display: op1+state.operator1+state.operand2,//get the current value for display
         operand1: op1,
         operand2: "",
@@ -441,8 +446,12 @@ class App extends React.Component{
       op2 = op2.replace(/^0+/, '0').replace(/\.+/, '.')
       
       let stateObj = {
+        power: true,
         display: state.operand1+state.operator1+op2,
+        operand1: state.operand1,
         operand2: op2,
+        prevOprt1: state.operator1,
+        operator1: state.operator1,
         operand1set: true,
         operator1set: true,//operator1 gets finished and set true when operand2 is pressed
         operand2set: false
@@ -452,11 +461,14 @@ class App extends React.Component{
   }
 
   setOperators(val){
+    console.log("set operators call....")
     let state = this.props.state
     if(!state.operator1set){//if operator1 is not finalized, set operator 1
       if(state.operand1 == "-" || state.operand1 == ""){//someone pushed an operator first or immediately after pushing - , don't set operator in this case
         let stateObj = {
+          power: true,
           display: state.operand1+""+state.operand2,
+          operand1: state.operand1,
           operand2: "",
           prevOprt1: state.operator1,
           operator1: "",
@@ -468,7 +480,9 @@ class App extends React.Component{
       }
       else {//operand1 is valid, set operator
         let stateObj = {
+          power: true,
           display: state.operand1+val+state.operand2,
+          operand1: state.operand1,
           operand2: "",
           prevOprt1: state.operator1,
           operator1: val,
@@ -482,7 +496,9 @@ class App extends React.Component{
     else{//if operator1 is set, set operator2
       if(state.operand2 == "-"){//someone clicked an operator immediately after clicking - for operand2 - 
         let stateObj = {
+          power: true,
           display: state.operand1+val+"",
+          operand1: state.operand1,
           operand2: "",
           prevOprt1: "-",//take the - used as last operator
           operator1: val,//operator 1 becomes the operator pressed.
@@ -510,6 +526,7 @@ class App extends React.Component{
         }  
         
         let stateObj = {
+          power: true,
           display: result+val,
           //operand1 should get result of evaluating prevop1+oprt1+op2
           //operator1 should now get operatorpassed
@@ -527,7 +544,7 @@ class App extends React.Component{
   }
 
   handleEquals(){
-    console.log(this.props.state)
+    console.log("handle equals...")
     var result 
     if(this.props.state.operand1=="" || this.props.state.operand2=="" || this.props.state.operator1 == ""){
       //this.updateDisplay(this.props.state.display)//if any is in initial state, display what was last displayed
@@ -662,3 +679,8 @@ ReactDOM.render(<AppWrapper/>, document.querySelector('#root'));
 //for setops, each time they make a state update, they pass that state to dispatch.
 //buttons aren't working to respond to state changes or state isn't changing
 //current state may not be getting received, try store.getState() to retrieve latest state.
+
+//send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
+//try changing state field name in mapstatetoprops
+//mapdispatchtoprops fields should return dispatch not just call it. could be
+//maybe rename dispatch fxns to action creator names

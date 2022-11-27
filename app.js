@@ -444,23 +444,27 @@ var App = /*#__PURE__*/function (_React$Component3) {
   _createClass(App, [{
     key: "togglePower",
     value: function togglePower() {
+      console.log("toggle power call....");
       this.props.doTogglePower();
     } //updates the display according to click
 
   }, {
     key: "updateDisplay",
     value: function updateDisplay(val) {
+      console.log("update display call....");
       this.props.doUpdateDisplay(val);
     } //Handle AC click
 
   }, {
     key: "resetCalculator",
     value: function resetCalculator() {
+      console.log("reset calculator call....");
       this.props.doResetCalculator();
     }
   }, {
     key: "setOperands",
     value: function setOperands(val) {
+      console.log("set operands call....");
       var state = this.props.state;
 
       if (!state.operand1set) {
@@ -504,6 +508,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "setOperators",
     value: function setOperators(val) {
+      console.log("set operators call....");
       var state = this.props.state;
 
       if (!state.operator1set) {
@@ -596,7 +601,7 @@ var App = /*#__PURE__*/function (_React$Component3) {
   }, {
     key: "handleEquals",
     value: function handleEquals() {
-      console.log(this.props.state);
+      console.log("handle equals...");
       var result;
 
       if (this.props.state.operand1 == "" || this.props.state.operand2 == "" || this.props.state.operator1 == "") {//this.updateDisplay(this.props.state.display)//if any is in initial state, display what was last displayed
@@ -753,3 +758,7 @@ ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.qu
 //for setops, each time they make a state update, they pass that state to dispatch.
 //buttons aren't working to respond to state changes or state isn't changing
 //current state may not be getting received, try store.getState() to retrieve latest state.
+//send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
+//try changing state field name in mapstatetoprops
+//mapdispatchtoprops fields should return dispatch not just call it. could be
+//maybe rename dispatch fxns to action creator names
