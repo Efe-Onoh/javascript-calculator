@@ -13,20 +13,26 @@ body {
 }
 
 #calculator-machine {
-  background: #003;
-  padding: 10px 5px;
+  background: #002;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: space-around;
+  padding: 10px;
   width: 300px;
+  height: 450px;
 }
 
 #calculator-machine h5 {
+  margin: 0;
   font-family: "Orbitron", sans-serif;
 }
 
 #display {
-  height: 40px;
   background: #444;
   border: 2px solid #888;
   font-family: "Silkscreen", cursive;
+  height: 50px;
 }
 
 #display h5 {
@@ -35,16 +41,97 @@ body {
   font-family: "Silkscreen", cursive;
 }
 
-#key-pad-gradient {
-  display: inline-block;
+#key-pad-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: space-around;
+  flex-wrap: wrap;
+  height: 300px;
 }
 
 .key-pad {
-  width: 70px;
+  width: 33%;
+}
+
+#clear {
+  order: 1;
+}
+
+#off {
+  order: 18;
+}
+
+#zero {
+  order: 2;
+}
+
+#one {
+  order: 3;
+}
+
+#two {
+  order: 4;
+}
+
+#three {
+  order: 5;
+}
+
+#four {
+  order: 6;
+}
+
+#five {
+  order: 7;
+}
+
+#six {
+  order: 8;
+}
+
+#seven {
+  order: 9;
+}
+
+#eight {
+  order: 10;
+}
+
+#nine {
+  order: 11;
+}
+
+#decimal {
+  order: 15;
+}
+
+#multiply {
+  order: 12;
+}
+
+#divide {
+  order: 13;
+}
+
+#add {
+  order: 16;
+}
+
+#subtract {
+  order: 14;
+}
+
+#equals {
+  order: 17;
 }
 
 .power-LED {
   display: inline-block;
+}
+
+.button-class {
+  width: 100%;
 }
 
 /*# sourceMappingURL=app.css.map */

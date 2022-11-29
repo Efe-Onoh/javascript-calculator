@@ -289,8 +289,7 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
-        id: "display",
-        className: "col"
+        id: "display"
       }, /*#__PURE__*/React.createElement("h5", {
         className: ""
       }, this.props.display));
@@ -304,9 +303,10 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
 var CalculatorButtons = function CalculatorButtons(props) {
   var button_array = props.item.map(function (item) {
     return /*#__PURE__*/React.createElement("div", {
-      id: "key-pad-gradient"
+      className: "key-pad",
+      id: item.id
     }, /*#__PURE__*/React.createElement("button", {
-      className: "key-pad button-class",
+      className: "button-class",
       key: item.value,
       id: item.id,
       onClick: function onClick() {
@@ -314,7 +314,9 @@ var CalculatorButtons = function CalculatorButtons(props) {
       }
     }, /*#__PURE__*/React.createElement("p", null, item.value)));
   });
-  return /*#__PURE__*/React.createElement("div", null, button_array);
+  return /*#__PURE__*/React.createElement("div", {
+    id: "key-pad-container"
+  }, button_array);
 };
 
 var Calculator = /*#__PURE__*/function (_React$Component2) {
@@ -765,9 +767,4 @@ var AppWrapper = /*#__PURE__*/function (_React$Component4) {
 }(React.Component);
 
 ;
-ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.querySelector('#root')); //move state to redux
-//connect redux to react next
-//look at handleequals better, make sure its ok, impl both setops
-//for setops, each time they make a state update, they pass that state to dispatch.
-//fix- buttons aren't working to respond to state changes or state isn't changing: add all fields to state dispatch
-//send val to the store reducer for the action type, it has prev state, use this to modify the state in the case statement
+ReactDOM.render( /*#__PURE__*/React.createElement(AppWrapper, null), document.querySelector('#root')); //style
