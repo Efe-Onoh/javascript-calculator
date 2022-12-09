@@ -290,7 +290,7 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
     value: function render() {
       return /*#__PURE__*/React.createElement("div", {
         id: "display"
-      }, /*#__PURE__*/React.createElement("h5", {
+      }, /*#__PURE__*/React.createElement("h1", {
         className: ""
       }, this.props.display));
     }
@@ -302,17 +302,14 @@ var DisplayComponent = /*#__PURE__*/function (_React$Component) {
 
 var CalculatorButtons = function CalculatorButtons(props) {
   var button_array = props.item.map(function (item) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "key-pad",
-      id: item.id
-    }, /*#__PURE__*/React.createElement("button", {
-      className: "button-class",
+    return /*#__PURE__*/React.createElement("button", {
+      className: "key-pad button-class",
       key: item.value,
       id: item.id,
       onClick: function onClick() {
         return props.handleClick(item.value);
       }
-    }, /*#__PURE__*/React.createElement("p", null, item.value)));
+    }, /*#__PURE__*/React.createElement("p", null, item.value));
   });
   return /*#__PURE__*/React.createElement("div", {
     id: "key-pad-container"

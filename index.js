@@ -278,7 +278,7 @@ class DisplayComponent extends React.Component{
   render(){
     return (
       <div id="display">
-        <h5 className="">{this.props.display}</h5>
+        <h1 className="">{this.props.display}</h1>
       </div>
     )
   }
@@ -288,11 +288,9 @@ class DisplayComponent extends React.Component{
 //store button elements into an array and handle clicks appropriately
 const CalculatorButtons = (props) =>{
   const button_array = props.item.map((item)=>(
-  <div className="key-pad" id={item.id}>
-    <button className="button-class" key={item.value} id={item.id} onClick={()=>props.handleClick(item.value)}>
+    <button className="key-pad button-class" key={item.value} id={item.id} onClick={()=>props.handleClick(item.value)}>
     <p>{item.value}</p>
     </button>
-  </div>
   
   )
   )
