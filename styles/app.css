@@ -30,6 +30,7 @@ body {
 
 #display {
   display: flex;
+  align-items: center;
   background: #112;
   border: 1px solid #888;
   height: 50px;
