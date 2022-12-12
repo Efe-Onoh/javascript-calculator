@@ -54,7 +54,7 @@ body {
   display: flex;
   width: 25%;
   font-weight: 300;
-  border: none;
+  border: 1px solid #888;
 }
 
 #clear {
